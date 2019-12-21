@@ -1,15 +1,12 @@
 package ru.tweekyone.graduateQualificationWork.gui;
 
-import java.awt.ComponentOrientation;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.LinkedList;
-import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import static javax.swing.GroupLayout.Alignment.BASELINE;
@@ -20,7 +17,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
 import ru.tweekyone.graduateQualificationWork.databaseConnection.RegionMarginDataAccess;
 import static ru.tweekyone.graduateQualificationWork.databaseConnection.RegionMarginDataAccess.getRegionsList;
 import ru.tweekyone.graduateQualificationWork.objects.RegionMargin;
@@ -67,20 +63,21 @@ public class MainFrame extends AbstractFrame{
         buttonGroup.add(mnn);
         buttonGroup.add(tn);
         
-        RegionMargin rm = new RegionMargin();
+        
+        //Выдает первый RegionMargin (Москва)
+        RegionMargin rm = RegionMarginDataAccess.getRegionMargin(1);
+        MarckupPanel marckupPanel = new MarckupPanel(rm);
+        JPanel marckupSetter = marckupPanel.getMarckupPanel();
         
         JComboBox<String> regions = getRegions();
-        regions.addActionListener(new ActionListener() {
+        regions.addItemListener(new ItemListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void itemStateChanged(ItemEvent e) {
                 int regionId = regions.getSelectedIndex() + 1;
-                //Нельзя передать ссылку на созданный класс actionRM в rm напрямую
+                //Нельзя передать ссылку на созданный класс actionRm в rm напрямую
                 RegionMargin actionRm = RegionMarginDataAccess.getRegionMargin(regionId);
                 if(actionRm != null){
-                    rm.setId(actionRm.getId());
-                    rm.setRegion(actionRm.getRegion());
-                    rm.setHasZone(actionRm.isHasZone());
-                    rm.setZoneMargin(actionRm.getZoneMargin());
+                    marckupPanel.setZoneMarginController(actionRm);
                 } else{
                     //Передать сообщение об ошибке в панель
                 }
@@ -88,8 +85,6 @@ public class MainFrame extends AbstractFrame{
         });
         
         JButton confirm = new JButton("Рассчитать");
-        
-        JPanel marckupSetter = new MarckupPanel().getMarckupPanel(rm);
         
         JPanel searchPanel = new JPanel();
         GroupLayout searchLayout = new GroupLayout(searchPanel);

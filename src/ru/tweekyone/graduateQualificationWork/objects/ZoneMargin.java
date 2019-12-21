@@ -7,7 +7,7 @@ package ru.tweekyone.graduateQualificationWork.objects;
 public class ZoneMargin {
     private final int regionId;
     private final String zone;
-    private final String consist;
+    private final String content;
     private double wrUpTo50;
     private double wrOver50to500;
     private double wrOver500;    
@@ -20,7 +20,7 @@ public class ZoneMargin {
         double rrOver50to500, double rrOver500){
         this.regionId = regionId;
         this.zone = zone;
-        this.consist = consist;
+        this.content = consist;
         this.wrUpTo50 = wrUpTo50;
         this.wrOver50to500 = wrOver50to500;
         this.wrOver500 = wrOver500;
@@ -33,8 +33,8 @@ public class ZoneMargin {
         return zone;
     }
 
-    public String getConsist() {
-        return consist;
+    public String getContent() {
+        return content;
     }
     
     public void setWrUpTo50(double wrUpTo50) {

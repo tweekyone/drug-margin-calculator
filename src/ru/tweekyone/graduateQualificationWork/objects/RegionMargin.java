@@ -31,7 +31,7 @@ public class RegionMargin {
         return region;
     }
 
-    public boolean isHasZone() {
+    public boolean hasZone() {
         return hasZone;
     }
 
