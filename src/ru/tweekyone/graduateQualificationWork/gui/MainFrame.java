@@ -18,7 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import ru.tweekyone.graduateQualificationWork.databaseConnection.RegionMarginDataAccess;
-import static ru.tweekyone.graduateQualificationWork.databaseConnection.RegionMarginDataAccess.getRegionsList;
 import ru.tweekyone.graduateQualificationWork.objects.RegionMargin;
 
 /**
@@ -129,7 +128,7 @@ public class MainFrame extends AbstractFrame{
     //Добавление списка регионов
     private JComboBox<String> getRegions(){
         //вывод сообщения, если list пустой
-        LinkedList<String> list = getRegionsList();
+        LinkedList<String> list = RegionMarginDataAccess.getRegionsList();
         String[] regionsArray = new String[list.size()];
         for (int i = 0; i < regionsArray.length; i++) {
             regionsArray[i] = list.get(i);

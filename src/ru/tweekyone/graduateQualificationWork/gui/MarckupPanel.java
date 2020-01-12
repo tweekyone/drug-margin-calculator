@@ -134,8 +134,8 @@ public class MarckupPanel{
     public void setZoneMarginController(RegionMargin newRm){
         if(newRm.hasZone()){
             //удаление старых элементов
+            panel.removeAll();
             if (zones != null && zoneContent != null){
-                panel.removeAll();
                 zones = null;
                 zoneContent = null;
             }
