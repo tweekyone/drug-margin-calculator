@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import ru.tweekyone.graduateQualificationWork.drugsBase.DrugBaseDataAccess;
 import ru.tweekyone.graduateQualificationWork.gui.MainFrame;
+import ru.tweekyone.graduateQualificationWork.objects.DrugInfo;
 
 public class DrugMarginCalculator {
 
@@ -16,10 +17,7 @@ public class DrugMarginCalculator {
     public static void main(String[] args) {
         //MainFrame window = new MainFrame();
         DrugBaseDataAccess db = new DrugBaseDataAccess();
-        LinkedList<Row> rows = db.getInfo("Парацетамол");
-        Row row = rows.get(0);
-        Cell cell = row.getCell(0);
-        System.out.println(cell.getStringCellValue() + " " + row.getCell(2).getStringCellValue() + " " + row.getCell(3).getStringCellValue());
+        LinkedList<DrugInfo> rows = db.getDrugsList("Парацетамол", true);
     }
     
 }

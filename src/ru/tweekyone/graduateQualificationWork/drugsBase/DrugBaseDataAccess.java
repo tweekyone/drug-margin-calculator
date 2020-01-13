@@ -19,6 +19,7 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import ru.tweekyone.graduateQualificationWork.objects.DrugInfo;
 
 /**
  *
@@ -26,7 +27,8 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
  */
 public class DrugBaseDataAccess {
     private String path;
-    private HSSFWorkbook workbook;
+    //private HSSFWorkbook workbook;
+    private HSSFSheet sheet;
     
     public DrugBaseDataAccess() {
         path = "data\\lp.zip";
@@ -38,26 +40,56 @@ public class DrugBaseDataAccess {
         try(ZipFile zf = new ZipFile(file);
             ZipFileZipEntrySource zfzes = new ZipFileZipEntrySource(zf)){
             Enumeration<ZipArchiveEntry> entryes = zf.getEntries();
-            workbook = new HSSFWorkbook(zfzes.getInputStream(entryes.nextElement()));
+            HSSFWorkbook workbook = new HSSFWorkbook(zfzes.getInputStream(entryes.nextElement()));
+            sheet = workbook.getSheet(workbook.getSheetName(0));
         } catch (IOException e){
             e.printStackTrace();
         }
     }
     
-    public LinkedList<Row> getInfo(String drugName){
-        HSSFSheet sheet = workbook.getSheet(workbook.getSheetName(0));
-        LinkedList<Row> rows = new LinkedList<>();
-        for(Row row : sheet){
-            for(Cell cell : row){
-                if (cell.getCellType() == CellType.STRING){
-                    if (cell.getStringCellValue().toLowerCase().trim().contains(drugName.toLowerCase())){
-                        if(!rows.contains(cell.getRow())){
-                            rows.add(cell.getRow());
+    public LinkedList<DrugInfo> getDrugsList(String drugName, boolean mnn){
+        LinkedList<DrugInfo> drugsList = new LinkedList<>();
+        if(mnn){
+            for(Row row : sheet){
+                for(Cell cell : row){
+                    if (cell.getColumnIndex() == 0){
+                        if (cell.getStringCellValue().toLowerCase().trim()
+                                .contains(drugName.toLowerCase().trim())){
+                            DrugInfo di = rowToDrug(cell.getRow());
+                            if(!drugsList.contains(di)){
+                                drugsList.add(di);
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            for(Row row : sheet){
+                for(Cell cell : row){
+                    if (cell.getColumnIndex() == 1){
+                        if (cell.getStringCellValue().toLowerCase().trim()
+                                .contains(drugName.toLowerCase().trim())){
+                            DrugInfo di = rowToDrug(cell.getRow());
+                            if(!drugsList.contains(di)){
+                                drugsList.add(di);
+                            }
                         }
                     }
                 }
             }
         }
-        return rows;
+            return drugsList;
+    }
+    
+    public DrugInfo rowToDrug(Row row){
+        String mnn = row.getCell(0).getStringCellValue();
+        String tn = row.getCell(1).getStringCellValue();
+        String spec = row.getCell(2).getStringCellValue();
+        String owner = row.getCell(3).getStringCellValue();
+        int amount = (int)(row.getCell(5).getNumericCellValue());
+        float ownerPrice = (float)(row.getCell(6).getNumericCellValue());
+        String regNo = row.getCell(8).getStringCellValue();
+        String date = row.getCell(9).getStringCellValue();
+        return new DrugInfo(mnn, tn, spec, owner, amount, ownerPrice, regNo, date);
     }
 }
