@@ -17,12 +17,17 @@ public class DrugMarginCalculator {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws MalformedURLException{
-        //MainFrame window = new MainFrame();
-        //DrugBaseDataAccess db = new DrugBaseDataAccess();
+    public static void main(String[] args){
+        MainFrame window = new MainFrame();
+//        Thread[] thgr = new Thread[Thread.currentThread().getThreadGroup().activeCount()];
+//        Thread.currentThread().getThreadGroup().enumerate(thgr);
+//        for (Thread th : thgr){
+//        System.out.println(th.getName());    
+//        }
+        //Thread.sleep(100000);
         //LinkedList<DrugInfo> rows = db.getDrugsList("Парацетамол", true);
-        DrugBaseDownload dbd = new DrugBaseDownload();
-        dbd.currentURL();
+        //DrugBaseDownload dbd = new DrugBaseDownload();
+        //DrugBaseDataAccess dbda = new DrugBaseDataAccess(dbd);
     }
     
 }

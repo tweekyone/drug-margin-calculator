@@ -23,8 +23,8 @@ public class DrugBaseDataAccess {
     //private HSSFWorkbook workbook;
     private HSSFSheet sheet;
     
-    public DrugBaseDataAccess() {
-        path = "data\\lp.zip";
+    public DrugBaseDataAccess(DrugBaseDownload dbd) {
+        path = dbd.getDrugBasePath();
         exstractData();
     }
     

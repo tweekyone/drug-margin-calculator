@@ -2,12 +2,17 @@ package ru.tweekyone.graduateQualificationWork.gui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.GroupLayout;
 import static javax.swing.GroupLayout.Alignment.BASELINE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
@@ -18,6 +23,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import ru.tweekyone.graduateQualificationWork.databaseConnection.RegionMarginDataAccess;
+import ru.tweekyone.graduateQualificationWork.drugsBase.DrugBaseDataAccess;
+import ru.tweekyone.graduateQualificationWork.drugsBase.DrugBaseDownload;
+import ru.tweekyone.graduateQualificationWork.objects.DrugInfo;
 import ru.tweekyone.graduateQualificationWork.objects.RegionMargin;
 
 /**
@@ -25,12 +33,23 @@ import ru.tweekyone.graduateQualificationWork.objects.RegionMargin;
  * @author Пирожок
  */
 public class MainFrame extends AbstractFrame{
+    private DrugBaseDataAccess dbda;
+    private LinkedList<DrugInfo> drugsList;
+    
    //Адаптер для событий при открытии\закрытии окна
     private class EventHandler extends WindowAdapter{
         
         @Override
         public void windowOpened(WindowEvent e){
-            //...
+            Thread drugBaseDownloadThread = new Thread(){
+                @Override
+                public void run(){
+                    DrugBaseDownload dbd = new DrugBaseDownload();
+                    dbda = new DrugBaseDataAccess(dbd);       
+                }
+            };
+            drugBaseDownloadThread.setName("DrugBaseDownloadThread");
+            drugBaseDownloadThread.start();
         }
     }
     
@@ -42,8 +61,8 @@ public class MainFrame extends AbstractFrame{
         //Подгонка расположения окна
         setLocation(dim.width/2 - 300, dim.height/2 - 150);
         setTitle("Калькулятор надбавки ЖНВЛП");
+        this.addWindowListener(new EventHandler());
         onInitComponents();
-        addWindowListener(new EventHandler());
     }
     
     //инициализация компонентов окна
@@ -84,13 +103,25 @@ public class MainFrame extends AbstractFrame{
         });
         
         JButton confirm = new JButton("Рассчитать");
+        confirm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Thread drugSearchThread = new Thread(){
+                    @Override
+                    public void run(){
+                        drugsList = dbda.getDrugsList(textField.getText(), mnn.isSelected());
+                    }
+                };
+                drugSearchThread.setName("DrugSearchThread");
+                drugSearchThread.start();
+            }
+        });
         
         JPanel searchPanel = new JPanel();
         GroupLayout searchLayout = new GroupLayout(searchPanel);
         searchPanel.setLayout(searchLayout);
         searchLayout.setAutoCreateGaps(true);
-        searchLayout.setAutoCreateContainerGaps(true);
-        
+        searchLayout.setAutoCreateContainerGaps(true);  
         
         searchLayout.setHorizontalGroup(searchLayout.createSequentialGroup()
                     .addGroup(searchLayout.createParallelGroup(LEADING)
@@ -119,7 +150,6 @@ public class MainFrame extends AbstractFrame{
                             .addComponent(confirm))
                     .addComponent(marckupSetter, GroupLayout.PREFERRED_SIZE, 
                             GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE));
-        
         add(searchPanel);
         //Обновление компонентов
         revalidate();
