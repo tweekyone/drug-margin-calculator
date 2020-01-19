@@ -1,16 +1,18 @@
 package ru.tweekyone.graduateQualificationWork.gui;
 
-import java.awt.ComponentOrientation;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.LinkedList;
-import javax.swing.BorderFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.GroupLayout;
 import static javax.swing.GroupLayout.Alignment.BASELINE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
@@ -20,9 +22,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
 import ru.tweekyone.graduateQualificationWork.databaseConnection.RegionMarginDataAccess;
-import static ru.tweekyone.graduateQualificationWork.databaseConnection.RegionMarginDataAccess.getRegionsList;
+import ru.tweekyone.graduateQualificationWork.drugsBase.DrugBaseDataAccess;
+import ru.tweekyone.graduateQualificationWork.drugsBase.DrugBaseDownload;
+import ru.tweekyone.graduateQualificationWork.objects.DrugInfo;
 import ru.tweekyone.graduateQualificationWork.objects.RegionMargin;
 
 /**
@@ -30,12 +33,23 @@ import ru.tweekyone.graduateQualificationWork.objects.RegionMargin;
  * @author Пирожок
  */
 public class MainFrame extends AbstractFrame{
+    private DrugBaseDataAccess dbda;
+    private LinkedList<DrugInfo> drugsList;
+    
    //Адаптер для событий при открытии\закрытии окна
     private class EventHandler extends WindowAdapter{
         
         @Override
         public void windowOpened(WindowEvent e){
-            //...
+            Thread drugBaseDownloadThread = new Thread(){
+                @Override
+                public void run(){
+                    DrugBaseDownload dbd = new DrugBaseDownload();
+                    dbda = new DrugBaseDataAccess(dbd);       
+                }
+            };
+            drugBaseDownloadThread.setName("DrugBaseDownloadThread");
+            drugBaseDownloadThread.start();
         }
     }
     
@@ -47,8 +61,8 @@ public class MainFrame extends AbstractFrame{
         //Подгонка расположения окна
         setLocation(dim.width/2 - 300, dim.height/2 - 150);
         setTitle("Калькулятор надбавки ЖНВЛП");
+        this.addWindowListener(new EventHandler());
         onInitComponents();
-        addWindowListener(new EventHandler());
     }
     
     //инициализация компонентов окна
@@ -67,20 +81,21 @@ public class MainFrame extends AbstractFrame{
         buttonGroup.add(mnn);
         buttonGroup.add(tn);
         
-        RegionMargin rm = new RegionMargin();
+        
+        //Выдает первый RegionMargin (Москва)
+        RegionMargin rm = RegionMarginDataAccess.getRegionMargin(1);
+        MarckupPanel marckupPanel = new MarckupPanel(rm);
+        JPanel marckupSetter = marckupPanel.getMarckupPanel();
         
         JComboBox<String> regions = getRegions();
-        regions.addActionListener(new ActionListener() {
+        regions.addItemListener(new ItemListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void itemStateChanged(ItemEvent e) {
                 int regionId = regions.getSelectedIndex() + 1;
-                //Нельзя передать ссылку на созданный класс actionRM в rm напрямую
+                //Нельзя передать ссылку на созданный класс actionRm в rm напрямую
                 RegionMargin actionRm = RegionMarginDataAccess.getRegionMargin(regionId);
                 if(actionRm != null){
-                    rm.setId(actionRm.getId());
-                    rm.setRegion(actionRm.getRegion());
-                    rm.setHasZone(actionRm.isHasZone());
-                    rm.setZoneMargin(actionRm.getZoneMargin());
+                    marckupPanel.setZoneMarginController(actionRm);
                 } else{
                     //Передать сообщение об ошибке в панель
                 }
@@ -88,15 +103,25 @@ public class MainFrame extends AbstractFrame{
         });
         
         JButton confirm = new JButton("Рассчитать");
-        
-        JPanel marckupSetter = new MarckupPanel().getMarckupPanel(rm);
+        confirm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Thread drugSearchThread = new Thread(){
+                    @Override
+                    public void run(){
+                        drugsList = dbda.getDrugsList(textField.getText(), mnn.isSelected());
+                    }
+                };
+                drugSearchThread.setName("DrugSearchThread");
+                drugSearchThread.start();
+            }
+        });
         
         JPanel searchPanel = new JPanel();
         GroupLayout searchLayout = new GroupLayout(searchPanel);
         searchPanel.setLayout(searchLayout);
         searchLayout.setAutoCreateGaps(true);
-        searchLayout.setAutoCreateContainerGaps(true);
-        
+        searchLayout.setAutoCreateContainerGaps(true);  
         
         searchLayout.setHorizontalGroup(searchLayout.createSequentialGroup()
                     .addGroup(searchLayout.createParallelGroup(LEADING)
@@ -125,7 +150,6 @@ public class MainFrame extends AbstractFrame{
                             .addComponent(confirm))
                     .addComponent(marckupSetter, GroupLayout.PREFERRED_SIZE, 
                             GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE));
-        
         add(searchPanel);
         //Обновление компонентов
         revalidate();
@@ -134,7 +158,7 @@ public class MainFrame extends AbstractFrame{
     //Добавление списка регионов
     private JComboBox<String> getRegions(){
         //вывод сообщения, если list пустой
-        LinkedList<String> list = getRegionsList();
+        LinkedList<String> list = RegionMarginDataAccess.getRegionsList();
         String[] regionsArray = new String[list.size()];
         for (int i = 0; i < regionsArray.length; i++) {
             regionsArray[i] = list.get(i);

@@ -34,7 +34,7 @@ public abstract class AbstractFrame extends JFrame{
         //DISPOSE_ON_CLOSE для правильного закрытия ресурсов
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         //Добавление иконки в шапку
-        Image icon = new ImageIcon("images//doctor.png").getImage();
+        Image icon = new ImageIcon("images\\doctor.png").getImage();
         setIconImage(icon);
     }   
 }
