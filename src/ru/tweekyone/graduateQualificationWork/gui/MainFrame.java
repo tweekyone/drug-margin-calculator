@@ -9,6 +9,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.LinkedList;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ButtonGroup;
@@ -35,6 +36,7 @@ import ru.tweekyone.graduateQualificationWork.objects.RegionMargin;
 public class MainFrame extends AbstractFrame{
     private DrugBaseDataAccess dbda;
     private LinkedList<DrugInfo> drugsList;
+    private ResultTable rt;
     
    //Адаптер для событий при открытии\закрытии окна
     private class EventHandler extends WindowAdapter{
@@ -50,6 +52,11 @@ public class MainFrame extends AbstractFrame{
             };
             drugBaseDownloadThread.setName("DrugBaseDownloadThread");
             drugBaseDownloadThread.start();
+            try {
+                drugBaseDownloadThread.join();
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
         }
     }
     
@@ -114,6 +121,12 @@ public class MainFrame extends AbstractFrame{
                 };
                 drugSearchThread.setName("DrugSearchThread");
                 drugSearchThread.start();
+                try {
+                    drugSearchThread.join();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                rt = new ResultTable(drugsList, marckupPanel);
             }
         });
         

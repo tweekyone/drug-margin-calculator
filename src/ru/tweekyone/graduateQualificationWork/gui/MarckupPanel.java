@@ -178,4 +178,32 @@ public class MarckupPanel{
             tfRet_50_500.setText(((Double) rm.getZoneMargin().get(index).getRrOver50to500()).toString());
             tfRet_500.setText(((Double) rm.getZoneMargin().get(index).getRrOver500()).toString());
     }
+
+    public String getUpTo50Value() {
+        return upTo50.getText();
+    }
+
+    public String getTfWhol_50Value() {
+        return tfWhol_50.getText();
+    }
+
+    public String getTfWhol_50_500Value() {
+        return tfWhol_50_500.getText();
+    }
+
+    public String getTfWhol_500Value() {
+        return tfWhol_500.getText();
+    }
+
+    public String getTfRet_50Value() {
+        return tfRet_50.getText();
+    }
+
+    public String getTfRet_50_500Value() {
+        return tfRet_50_500.getText();
+    }
+
+    public String getTfRet_500Value() {
+        return tfRet_500.getText();
+    }
 }
