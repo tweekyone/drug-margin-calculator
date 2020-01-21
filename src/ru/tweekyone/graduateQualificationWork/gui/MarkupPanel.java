@@ -17,7 +17,7 @@ import ru.tweekyone.graduateQualificationWork.objects.RegionMargin;
  *
  * @author Пирожок
  */
-public class MarckupPanel{
+public class MarkupPanel{
     private RegionMargin currentRegionMargin;
     private JPanel panel;
     private JLabel wholesale;
@@ -34,7 +34,7 @@ public class MarckupPanel{
     private JComboBox<String> zones;
     private JLabel zoneContent;
 
-    public MarckupPanel(RegionMargin rm){
+    public MarkupPanel(RegionMargin rm){
         currentRegionMargin = rm;
         panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder("Наценка, %"));

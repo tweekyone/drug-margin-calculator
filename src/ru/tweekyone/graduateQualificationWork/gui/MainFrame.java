@@ -91,7 +91,7 @@ public class MainFrame extends AbstractFrame{
         
         //Выдает первый RegionMargin (Москва)
         RegionMargin rm = RegionMarginDataAccess.getRegionMargin(1);
-        MarckupPanel marckupPanel = new MarckupPanel(rm);
+        MarkupPanel marckupPanel = new MarkupPanel(rm);
         JPanel marckupSetter = marckupPanel.getMarckupPanel();
         
         JComboBox<String> regions = getRegions();

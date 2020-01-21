@@ -59,8 +59,8 @@ public class DrugBaseDownload{
     
     private void checkDrugBase(){
         checkURL();
-        if (hasNewURL){
-            File file = new File(drugBasePath);
+        File file = new File(drugBasePath);
+        if (hasNewURL || !file.exists()){
             try(ReadableByteChannel rbc = Channels.newChannel(new URL(currentURL).openStream());
                 FileOutputStream fos = new FileOutputStream(file)){
                 fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);

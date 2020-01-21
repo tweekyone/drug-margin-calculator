@@ -92,7 +92,7 @@ public class DrugInfo {
             return false;
         }
         DrugInfo di = (DrugInfo) obj;
-        return di.getREGNO().equals(this.getREGNO());
+        return di.getREGNO().equals(this.getREGNO()) && di.getSPEC().equals(this.getSPEC());
     }
     
     @Override

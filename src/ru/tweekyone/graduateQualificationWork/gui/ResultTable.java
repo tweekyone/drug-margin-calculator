@@ -5,6 +5,7 @@ import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import ru.tweekyone.graduateQualificationWork.calculation.MarginCalculation;
 import ru.tweekyone.graduateQualificationWork.objects.DrugInfo;
 
 /**
@@ -14,9 +15,10 @@ import ru.tweekyone.graduateQualificationWork.objects.DrugInfo;
 public class ResultTable extends AbstractFrame{
     private String[][] dataArray;
     private String[] columnNames;
-    private MarckupPanel mp;
+    private MarkupPanel mp;
+    private JTable resultTable;
     
-    public ResultTable(LinkedList<DrugInfo> searchResult, MarckupPanel mp){
+    public ResultTable(LinkedList<DrugInfo> searchResult, MarkupPanel mp){
         this.mp = mp;
         dataArray = new String[searchResult.size()][];
         columnNames = new String[]{"МНН", "Торговое наименование", "Лекарственная форма, дозировка, упаковка",
@@ -40,14 +42,15 @@ public class ResultTable extends AbstractFrame{
             String regNo = di.getREGNO();
             String date = di.getDATE();
             String ownerPrice = String.valueOf(di.getOwnerPrice());
-            
-            dataArray[i] = new String[]{mnn, tn, spec, own, amount, regNo, date, ownerPrice};
+            String wholesalePrice = MarginCalculation.getWholesaleMargin(true, ownerPrice, mp);
+            String retailPrice = MarginCalculation.getRetailMargin(true, true, ownerPrice, wholesalePrice, mp);
+            dataArray[i] = new String[]{mnn, tn, spec, own, amount, regNo, date, ownerPrice, wholesalePrice, retailPrice};
         }
     };
     
     //добавить кнопки УСН/НДС, коррекция фактической цены производителя
     private void onInitComponents(){
-        JTable resultTable = new JTable(dataArray, columnNames);
+        resultTable = new JTable(dataArray, columnNames);
         resultTable.setAutoCreateRowSorter(true);
         JScrollPane scrollPane = new JScrollPane(resultTable);
         add(scrollPane);
