@@ -1,5 +1,6 @@
 package ru.tweekyone.graduateQualificationWork.gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -12,6 +13,7 @@ import java.util.LinkedList;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
 import javax.swing.GroupLayout;
@@ -34,9 +36,11 @@ import ru.tweekyone.graduateQualificationWork.objects.RegionMargin;
  * @author Пирожок
  */
 public class MainFrame extends AbstractFrame{
+    private DrugBaseDownload dbd;
     private DrugBaseDataAccess dbda;
     private LinkedList<DrugInfo> drugsList;
     private ResultTable rt;
+    private JLabel connectionLabel;
     
    //Адаптер для событий при открытии\закрытии окна
     private class EventHandler extends WindowAdapter{
@@ -46,8 +50,8 @@ public class MainFrame extends AbstractFrame{
             Thread drugBaseDownloadThread = new Thread(){
                 @Override
                 public void run(){
-                    DrugBaseDownload dbd = new DrugBaseDownload();
-                    dbda = new DrugBaseDataAccess(dbd);       
+                    dbd = new DrugBaseDownload(connectionLabel);
+                    dbd.checkDrugBase();
                 }
             };
             drugBaseDownloadThread.setName("DrugBaseDownloadThread");
@@ -62,18 +66,26 @@ public class MainFrame extends AbstractFrame{
     
     public MainFrame(){
         setSize(600, 300);
+        setResizable(false);
         //Получение размера окна пользователя
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension dim = toolkit.getScreenSize();
         //Подгонка расположения окна
         setLocation(dim.width/2 - 300, dim.height/2 - 150);
         setTitle("Калькулятор надбавки ЖНВЛП");
+        connectionLabel = new JLabel();
+        connectionLabel.setBackground(Color.red);
+        connectionLabel.setVisible(false);
+        connectionLabel.setOpaque(true);
+        connectionLabel.setAlignmentX(CENTER_ALIGNMENT);
         this.addWindowListener(new EventHandler());
         onInitComponents();
     }
     
     //инициализация компонентов окна
     private void onInitComponents(){
+        
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         
         JLabel drugName = new JLabel("Наименование препарата:");
         JLabel regionName = new JLabel("Регион:");
@@ -91,7 +103,7 @@ public class MainFrame extends AbstractFrame{
         
         //Выдает первый RegionMargin (Москва)
         RegionMargin rm = RegionMarginDataAccess.getRegionMargin(1);
-        MarkupPanel marckupPanel = new MarkupPanel(rm);
+        MarkupController marckupPanel = new MarkupController(rm);
         JPanel marckupSetter = marckupPanel.getMarckupPanel();
         
         JComboBox<String> regions = getRegions();
@@ -116,6 +128,7 @@ public class MainFrame extends AbstractFrame{
                 Thread drugSearchThread = new Thread(){
                     @Override
                     public void run(){
+                        dbda = new DrugBaseDataAccess(dbd);
                         drugsList = dbda.getDrugsList(textField.getText(), mnn.isSelected());
                     }
                 };
@@ -134,7 +147,7 @@ public class MainFrame extends AbstractFrame{
         GroupLayout searchLayout = new GroupLayout(searchPanel);
         searchPanel.setLayout(searchLayout);
         searchLayout.setAutoCreateGaps(true);
-        searchLayout.setAutoCreateContainerGaps(true);  
+        searchLayout.setAutoCreateContainerGaps(true);
         
         searchLayout.setHorizontalGroup(searchLayout.createSequentialGroup()
                     .addGroup(searchLayout.createParallelGroup(LEADING)
@@ -164,6 +177,7 @@ public class MainFrame extends AbstractFrame{
                     .addComponent(marckupSetter, GroupLayout.PREFERRED_SIZE, 
                             GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE));
         add(searchPanel);
+        add(connectionLabel);
         //Обновление компонентов
         revalidate();
     }
@@ -180,5 +194,4 @@ public class MainFrame extends AbstractFrame{
         regions.setToolTipText("Регион");
         return regions;
     }
-
 }

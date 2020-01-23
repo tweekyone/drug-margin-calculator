@@ -15,10 +15,10 @@ import ru.tweekyone.graduateQualificationWork.objects.DrugInfo;
 public class ResultTable extends AbstractFrame{
     private String[][] dataArray;
     private String[] columnNames;
-    private MarkupPanel mp;
+    private MarkupController mp;
     private JTable resultTable;
     
-    public ResultTable(LinkedList<DrugInfo> searchResult, MarkupPanel mp){
+    public ResultTable(LinkedList<DrugInfo> searchResult, MarkupController mp){
         this.mp = mp;
         dataArray = new String[searchResult.size()][];
         columnNames = new String[]{"МНН", "Торговое наименование", "Лекарственная форма, дозировка, упаковка",

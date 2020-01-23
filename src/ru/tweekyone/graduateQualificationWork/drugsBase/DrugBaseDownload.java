@@ -1,5 +1,6 @@
 package ru.tweekyone.graduateQualificationWork.drugsBase;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,9 +9,14 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
+import javax.swing.JLabel;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -26,18 +32,18 @@ public class DrugBaseDownload{
     private String drugBasePath;
     private boolean hasNewURL;
     private Properties properties;
+    private JLabel connectionLabel;
     
-    public DrugBaseDownload(){
+    public DrugBaseDownload(JLabel connectionLabel){
+        this.connectionLabel = connectionLabel;
         properties = new Properties();
         drugBasePath = "data\\lp.zip";
         try(FileInputStream fis = new FileInputStream("src\\ru\\tweekyone\\graduateQualificationWork\\resources\\database.properties")){
             properties.load(fis);
-            URL = properties.getProperty("DrugURL");
+            URL = properties.getProperty("drugURL");
         } catch (IOException e){
             e.printStackTrace();
         }
-        getCurrentURL();
-        checkDrugBase();
     }
     
     private void getCurrentURL(){
@@ -50,6 +56,12 @@ public class DrugBaseDownload{
                     currentURL = URLparts[0];
                 }
             }
+        } catch (UnknownHostException e){
+            currentURL = URL;
+            connectionLabel.setText("База лекарств не обновлена! Проверьте интернет-соединение!"
+                    + " Дата последнего обновления: " + properties.getProperty("updateDate"));
+            connectionLabel.setVisible(true);
+            e.printStackTrace();
         } catch (SocketTimeoutException e){
             e.printStackTrace();
         } catch (IOException e){
@@ -57,7 +69,8 @@ public class DrugBaseDownload{
         } 
     }
     
-    private void checkDrugBase(){
+    public void checkDrugBase(){
+        getCurrentURL();
         checkURL();
         File file = new File(drugBasePath);
         if (hasNewURL || !file.exists()){
@@ -77,8 +90,11 @@ public class DrugBaseDownload{
     private void checkURL(){
         if (URL == null || !currentURL.equals(URL)){
             hasNewURL = true;
-            try(FileOutputStream fos = new FileOutputStream("src\\ru\\tweekyone\\graduateQualificationWork\\resources\\database.properties")){
-                properties.setProperty("DrugURL", currentURL);
+            File file = new File("src\\ru\\tweekyone\\graduateQualificationWork\\resources\\database.properties");
+            try(FileOutputStream fos = new FileOutputStream(file)){
+                properties.setProperty("drugURL", currentURL);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                properties.setProperty("updateDate", sdf.format(file.lastModified()));
                 properties.store(fos, "New URL for Dug Database!");
             } catch (IOException e){
                 e.printStackTrace();  

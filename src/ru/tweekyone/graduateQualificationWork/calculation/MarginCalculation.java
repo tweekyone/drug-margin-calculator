@@ -1,13 +1,13 @@
 package ru.tweekyone.graduateQualificationWork.calculation;
 
-import ru.tweekyone.graduateQualificationWork.gui.MarkupPanel;
+import ru.tweekyone.graduateQualificationWork.gui.MarkupController;
 
 /**
  *
  * @author Пирожок
  */
 public class MarginCalculation {
-    public static String getWholesaleMargin(boolean isVAT, String ownerPrice, MarkupPanel mp){
+    public static String getWholesaleMargin(boolean isVAT, String ownerPrice, MarkupController mp){
         float fOwnerPrice = Float.parseFloat(ownerPrice);
         float markup = fOwnerPrice*getWholesaleMarkup(fOwnerPrice, mp)/100;
         if(isVAT){
@@ -20,7 +20,7 @@ public class MarginCalculation {
     }
     
     public static String getRetailMargin(boolean isVAT, boolean isWholesaleVAT, 
-                                        String ownerPrice, String wholesalePrice, MarkupPanel mp){
+                                        String ownerPrice, String wholesalePrice, MarkupController mp){
         float fOwnerPrice = Float.parseFloat(ownerPrice);
         float markup = fOwnerPrice*getRetailMarkup(fOwnerPrice, mp)/100;
         if(isVAT){
@@ -44,28 +44,28 @@ public class MarginCalculation {
         }
     }
     
-    private static float getWholesalePriceWithoutVAT(float fOwnerPrice, MarkupPanel mp){
+    private static float getWholesalePriceWithoutVAT(float fOwnerPrice, MarkupController mp){
         float markup = fOwnerPrice*getWholesaleMarkup(fOwnerPrice, mp)/100;
         return fOwnerPrice + markup;
     }
     
-    private static Float getWholesaleMarkup (float fOwnerPrice, MarkupPanel mp){
+    private static Float getWholesaleMarkup (float fOwnerPrice, MarkupController mp){
         if (fOwnerPrice < 50){
-            return Float.parseFloat(mp.getTfWhol_50Value());
+            return mp.getTfWhol_50Value();
         }else if(fOwnerPrice >= 50 && fOwnerPrice < 500){
-            return Float.parseFloat(mp.getTfWhol_50_500Value());
+            return mp.getTfWhol_50_500Value();
         }else{
-            return Float.parseFloat(mp.getTfWhol_500Value());
+            return mp.getTfWhol_500Value();
         }
     }
     
-    private static Float getRetailMarkup (float fOwnerPrice, MarkupPanel mp){
+    private static Float getRetailMarkup (float fOwnerPrice, MarkupController mp){
         if (fOwnerPrice < 50){
-            return Float.parseFloat(mp.getTfRet_50Value());
+            return mp.getTfRet_50Value();
         }else if(fOwnerPrice >= 50 && fOwnerPrice < 500){
-            return Float.parseFloat(mp.getTfRet_50_500Value());
+            return mp.getTfRet_50_500Value();
         }else{
-            return Float.parseFloat(mp.getTfRet_500Value());
+            return mp.getTfRet_500Value();
         }
     }
 }

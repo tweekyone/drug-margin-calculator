@@ -17,7 +17,7 @@ import ru.tweekyone.graduateQualificationWork.objects.RegionMargin;
  *
  * @author Пирожок
  */
-public class MarkupPanel{
+public class MarkupController{
     private RegionMargin currentRegionMargin;
     private JPanel panel;
     private JLabel wholesale;
@@ -34,7 +34,7 @@ public class MarkupPanel{
     private JComboBox<String> zones;
     private JLabel zoneContent;
 
-    public MarkupPanel(RegionMargin rm){
+    public MarkupController(RegionMargin rm){
         currentRegionMargin = rm;
         panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder("Наценка, %"));
@@ -179,31 +179,31 @@ public class MarkupPanel{
             tfRet_500.setText(((Double) rm.getZoneMargin().get(index).getRrOver500()).toString());
     }
 
-    public String getUpTo50Value() {
-        return upTo50.getText();
+    public float getUpTo50Value() {
+        return Float.parseFloat(upTo50.getText());
     }
 
-    public String getTfWhol_50Value() {
-        return tfWhol_50.getText();
+    public float getTfWhol_50Value() {
+        return Float.parseFloat(tfWhol_50.getText());
     }
 
-    public String getTfWhol_50_500Value() {
-        return tfWhol_50_500.getText();
+    public float getTfWhol_50_500Value() {
+        return Float.parseFloat(tfWhol_50_500.getText());
     }
 
-    public String getTfWhol_500Value() {
-        return tfWhol_500.getText();
+    public float getTfWhol_500Value() {
+        return Float.parseFloat(tfWhol_500.getText());
     }
 
-    public String getTfRet_50Value() {
-        return tfRet_50.getText();
+    public float getTfRet_50Value() {
+        return Float.parseFloat(tfRet_50.getText());
     }
 
-    public String getTfRet_50_500Value() {
-        return tfRet_50_500.getText();
+    public float getTfRet_50_500Value() {
+        return Float.parseFloat(tfRet_50_500.getText());
     }
 
-    public String getTfRet_500Value() {
-        return tfRet_500.getText();
+    public float getTfRet_500Value() {
+        return Float.parseFloat(tfRet_500.getText());
     }
 }
