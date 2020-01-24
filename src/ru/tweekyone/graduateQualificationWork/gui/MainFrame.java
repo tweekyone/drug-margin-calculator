@@ -10,12 +10,8 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.LinkedList;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
 import javax.swing.GroupLayout;
 import static javax.swing.GroupLayout.Alignment.BASELINE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
@@ -73,11 +69,7 @@ public class MainFrame extends AbstractFrame{
         //Подгонка расположения окна
         setLocation(dim.width/2 - 300, dim.height/2 - 150);
         setTitle("Калькулятор надбавки ЖНВЛП");
-        connectionLabel = new JLabel();
-        connectionLabel.setBackground(Color.red);
-        connectionLabel.setVisible(false);
-        connectionLabel.setOpaque(true);
-        connectionLabel.setAlignmentX(CENTER_ALIGNMENT);
+        connectionLabel = new Labels().getConnectionLabel();
         this.addWindowListener(new EventHandler());
         onInitComponents();
     }
@@ -113,11 +105,7 @@ public class MainFrame extends AbstractFrame{
                 int regionId = regions.getSelectedIndex() + 1;
                 //Нельзя передать ссылку на созданный класс actionRm в rm напрямую
                 RegionMargin actionRm = RegionMarginDataAccess.getRegionMargin(regionId);
-                if(actionRm != null){
-                    marckupPanel.setZoneMarginController(actionRm);
-                } else{
-                    //Передать сообщение об ошибке в панель
-                }
+                marckupPanel.setZoneMarginController(actionRm);
             }
         });
         
@@ -140,6 +128,19 @@ public class MainFrame extends AbstractFrame{
                     ex.printStackTrace();
                 }
                 rt = new ResultTable(drugsList, marckupPanel);
+            }
+        });
+        
+        JButton saveUserMargin = new JButton("Сохранить");
+        saveUserMargin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Thread marginSavingThread = new Thread(){
+                    @Override
+                    public void run(){
+                        
+                    }
+                };
             }
         });
         
@@ -184,7 +185,6 @@ public class MainFrame extends AbstractFrame{
       
     //Добавление списка регионов
     private JComboBox<String> getRegions(){
-        //вывод сообщения, если list пустой
         LinkedList<String> list = RegionMarginDataAccess.getRegionsList();
         String[] regionsArray = new String[list.size()];
         for (int i = 0; i < regionsArray.length; i++) {

@@ -19,6 +19,7 @@ import ru.tweekyone.graduateQualificationWork.objects.RegionMargin;
  */
 public class MarkupController{
     private RegionMargin currentRegionMargin;
+    private int currentZoneId;
     private JPanel panel;
     private JLabel wholesale;
     private JLabel retail;
@@ -105,6 +106,7 @@ public class MarkupController{
         if (currentRegionMargin.hasZone()){
             zones = new JComboBox<>(currentRegionMargin.getZoneArray());
             String content = currentRegionMargin.getZoneMargin().get(0).getContent();
+            currentZoneId = currentRegionMargin.getZoneMargin().get(0).getId();
             zoneContent = new JLabel(content);
             zoneContent.setVerticalAlignment(JLabel.TOP);
             zoneContent.setHorizontalAlignment(JLabel.CENTER);
@@ -132,6 +134,7 @@ public class MarkupController{
     
     //Коррекция поля настройки наценки
     public void setZoneMarginController(RegionMargin newRm){
+        currentZoneId = newRm.getZoneMargin().get(0).getId();
         if(newRm.hasZone()){
             //удаление старых элементов
             panel.removeAll();
@@ -139,25 +142,26 @@ public class MarkupController{
                 zones = null;
                 zoneContent = null;
             }
-                zones = new JComboBox<>(newRm.getZoneArray());
-                String content = newRm.getZoneMargin().get(0).getContent();
-                zoneContent = new JLabel(content);
-                zoneContent.setVerticalAlignment(JLabel.TOP);
-                zoneContent.setHorizontalAlignment(JLabel.CENTER);
-            
-                zones.addItemListener(new ItemListener() {
-                    @Override
-                    public void itemStateChanged(ItemEvent e) {
-                        int zoneId = zones.getSelectedIndex();
-                        String newContent = newRm.getZoneMargin().get(zoneId).getContent();
-                        zoneContent.setText(newContent);
-                        setTextFieldsByIndex(newRm, zoneId);
-                    }
-                });
-                panel.add(zones);
-                panel.add(zoneContent);
-                panel.add(getMarckupSetterLayout());
-                setTextFieldsByIndex(newRm, 0);
+            zones = new JComboBox<>(newRm.getZoneArray());
+            String content = newRm.getZoneMargin().get(0).getContent();
+            zoneContent = new JLabel(content);
+            zoneContent.setVerticalAlignment(JLabel.TOP);
+            zoneContent.setHorizontalAlignment(JLabel.CENTER);
+
+            zones.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    int zoneId = zones.getSelectedIndex();
+                    String newContent = newRm.getZoneMargin().get(zoneId).getContent();
+                    currentZoneId = newRm.getZoneMargin().get(zoneId).getId();
+                    zoneContent.setText(newContent);
+                    setTextFieldsByIndex(newRm, zoneId);
+                }
+            });
+            panel.add(zones);
+            panel.add(zoneContent);
+            panel.add(getMarckupSetterLayout());
+            setTextFieldsByIndex(newRm, 0);
         } else {
             panel.removeAll();
             if (zones != null && zoneContent != null){
@@ -205,5 +209,9 @@ public class MarkupController{
 
     public float getTfRet_500Value() {
         return Float.parseFloat(tfRet_500.getText());
+    }
+    
+    public RegionMargin getRegionMargin(){
+        return currentRegionMargin;
     }
 }

@@ -5,6 +5,7 @@ package ru.tweekyone.graduateQualificationWork.objects;
  * @author Пирожок
  */
 public class ZoneMargin {
+    private final int id;
     private final int regionId;
     private final String zone;
     private final String content;
@@ -15,9 +16,10 @@ public class ZoneMargin {
     private double rrOver50to500;
     private double rrOver500;
     
-    public ZoneMargin(int regionId, String zone, String consist, double wrUpTo50, 
+    public ZoneMargin(int id, int regionId, String zone, String consist, double wrUpTo50, 
         double wrOver50to500, double wrOver500, double rrUpTo50, 
         double rrOver50to500, double rrOver500){
+        this.id = id;
         this.regionId = regionId;
         this.zone = zone;
         this.content = consist;
@@ -28,7 +30,11 @@ public class ZoneMargin {
         this.rrOver50to500 = rrOver50to500;
         this.rrOver500 = rrOver500;
     }
-
+    
+    public int getId(){
+        return id;
+    }
+    
     public String getZone() {
         return zone;
     }

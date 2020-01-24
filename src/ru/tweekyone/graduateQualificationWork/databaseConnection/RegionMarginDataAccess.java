@@ -15,7 +15,8 @@ import ru.tweekyone.graduateQualificationWork.objects.ZoneMargin;
 public class RegionMarginDataAccess {
     private static final String GET_MARGIN_DATA = "SELECT * FROM REGION LEFT JOIN "
             + "ZONE_MARGIN ON REGION.ID = ZONE_MARGIN.ID_REGION WHERE REGION.ID = ?";
-    private static final String SET_MARGIN_DATA = "";
+    private static final String SET_MARGIN_DATA = "UPDATE zone_margin SET WR_UP_TO_50 = ?, WR_OVER_50_TO_500 = ?, WR_OVER_500 = ?, RR_UP_TO_50 = ?,"
++ " RR_OVER_50_TO_500 = ?, RR_OVER_500 = ? WHERE ID = ?";
     private static final String GET_REGIONS = "SELECT REGION FROM USERNAME.REGION";    
     
     public static LinkedList<String> getRegionsList(){
@@ -44,13 +45,13 @@ public class RegionMarginDataAccess {
             regionMargin.setId(resultSet.getInt(1));
             regionMargin.setRegion(resultSet.getString(2));
             regionMargin.setHasZone(resultSet.getBoolean(3));
-            zoneMargin.add(new ZoneMargin(regionMargin.getId(), resultSet.getString(6), 
+            zoneMargin.add(new ZoneMargin(resultSet.getInt(4), regionMargin.getId(), resultSet.getString(6), 
                             resultSet.getString(7), resultSet.getDouble(8), 
                             resultSet.getDouble(9), resultSet.getDouble(10), 
                             resultSet.getDouble(11), resultSet.getDouble(12),
                             resultSet.getDouble(13)));
             while(resultSet.next()){
-                zoneMargin.add(new ZoneMargin(regionMargin.getId(), resultSet.getString(6), 
+                zoneMargin.add(new ZoneMargin(resultSet.getInt(4), regionMargin.getId(), resultSet.getString(6), 
                                 resultSet.getString(7), resultSet.getDouble(8), 
                                 resultSet.getDouble(9), resultSet.getDouble(10), 
                                 resultSet.getDouble(11), resultSet.getDouble(12),
@@ -61,6 +62,19 @@ public class RegionMarginDataAccess {
             e.printStackTrace();
         } finally{
             return regionMargin;
+        }
+    }
+    
+    public static boolean setRegionMargin(RegionMargin rm){
+        try(Connection con = ConnectionPool.getConnection()){
+            PreparedStatement ps = con.prepareStatement(SET_MARGIN_DATA);
+                for(ZoneMargin zm : rm.getZoneMargin()){
+                    ps.setDouble(1, zm.getWrUpTo50());
+                    ps.setInt(7, zm.getId());
+                    ps.executeUpdate();
+            }
+        } catch (SQLException e){
+            
         }
     }
 }
