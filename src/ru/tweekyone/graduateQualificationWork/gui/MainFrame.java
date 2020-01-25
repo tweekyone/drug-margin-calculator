@@ -1,6 +1,5 @@
 package ru.tweekyone.graduateQualificationWork.gui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -10,6 +9,8 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
@@ -37,6 +38,7 @@ public class MainFrame extends AbstractFrame{
     private LinkedList<DrugInfo> drugsList;
     private ResultTable rt;
     private JLabel connectionLabel;
+    private JLabel floatWarningLabel;
     
    //Адаптер для событий при открытии\закрытии окна
     private class EventHandler extends WindowAdapter{
@@ -69,7 +71,8 @@ public class MainFrame extends AbstractFrame{
         //Подгонка расположения окна
         setLocation(dim.width/2 - 300, dim.height/2 - 150);
         setTitle("Калькулятор надбавки ЖНВЛП");
-        connectionLabel = new Labels().getConnectionLabel();
+        connectionLabel = new Labels().getWarningLabel();
+        floatWarningLabel = new Labels().getWarningLabel();
         this.addWindowListener(new EventHandler());
         onInitComponents();
     }
@@ -95,7 +98,7 @@ public class MainFrame extends AbstractFrame{
         
         //Выдает первый RegionMargin (Москва)
         RegionMargin rm = RegionMarginDataAccess.getRegionMargin(1);
-        MarkupController marckupPanel = new MarkupController(rm);
+        MarkupController marckupPanel = new MarkupController(rm, floatWarningLabel);
         JPanel marckupSetter = marckupPanel.getMarckupPanel();
         
         JComboBox<String> regions = getRegions();
@@ -131,16 +134,23 @@ public class MainFrame extends AbstractFrame{
             }
         });
         
-        JButton saveUserMargin = new JButton("Сохранить");
+        JButton saveUserMargin = new JButton("Сохранить \nнаценку");
         saveUserMargin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Thread marginSavingThread = new Thread(){
                     @Override
                     public void run(){
-                        
+                        RegionMarginDataAccess.setRegionMargin(marckupPanel);
                     }
                 };
+                marginSavingThread.setName("MarginSavingThread");
+                marginSavingThread.start();
+                try {
+                    marginSavingThread.join();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
         
@@ -162,7 +172,8 @@ public class MainFrame extends AbstractFrame{
                             .addGroup(searchLayout.createSequentialGroup()
                                     .addComponent(mnn)
                                     .addComponent(tn))
-                            .addComponent(confirm)));
+                            .addComponent(confirm)
+                            .addComponent(saveUserMargin)));
                     
         searchLayout.setVerticalGroup(searchLayout.createSequentialGroup()
                     .addGroup(searchLayout.createParallelGroup(BASELINE)
@@ -175,10 +186,13 @@ public class MainFrame extends AbstractFrame{
                             .addComponent(regionName)
                             .addComponent(regions)
                             .addComponent(confirm))
-                    .addComponent(marckupSetter, GroupLayout.PREFERRED_SIZE, 
-                            GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE));
+                    .addGroup(searchLayout.createParallelGroup(BASELINE)
+                            .addComponent(marckupSetter, GroupLayout.PREFERRED_SIZE, 
+                            GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(saveUserMargin)));
         add(searchPanel);
         add(connectionLabel);
+        add(floatWarningLabel);
         //Обновление компонентов
         revalidate();
     }

@@ -30,7 +30,7 @@ public abstract class AbstractFrame extends JFrame{
     }
     
     public AbstractFrame(){
-        //setVisible(false);
+        setVisible(true);
         //DISPOSE_ON_CLOSE для правильного закрытия ресурсов
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         //Добавление иконки в шапку

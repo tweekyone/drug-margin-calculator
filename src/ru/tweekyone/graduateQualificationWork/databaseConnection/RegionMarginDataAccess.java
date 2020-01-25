@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
+import ru.tweekyone.graduateQualificationWork.gui.MarkupController;
 import ru.tweekyone.graduateQualificationWork.objects.RegionMargin;
 import ru.tweekyone.graduateQualificationWork.objects.ZoneMargin;
 
@@ -65,16 +66,23 @@ public class RegionMarginDataAccess {
         }
     }
     
-    public static boolean setRegionMargin(RegionMargin rm){
-        try(Connection con = ConnectionPool.getConnection()){
-            PreparedStatement ps = con.prepareStatement(SET_MARGIN_DATA);
-                for(ZoneMargin zm : rm.getZoneMargin()){
-                    ps.setDouble(1, zm.getWrUpTo50());
-                    ps.setInt(7, zm.getId());
-                    ps.executeUpdate();
+    public static boolean setRegionMargin(MarkupController mc){
+        if(mc.isFloatCheck()){
+            try(Connection con = ConnectionPool.getConnection()){
+                PreparedStatement ps = con.prepareStatement(SET_MARGIN_DATA);
+                ps.setFloat(1, mc.getTfWhol_50Value());
+                ps.setFloat(2, mc.getTfWhol_50_500Value());
+                ps.setFloat(3, mc.getTfWhol_500Value());
+                ps.setFloat(4, mc.getTfRet_50Value());
+                ps.setFloat(5, mc.getTfRet_50_500Value());
+                ps.setFloat(6, mc.getTfRet_500Value());
+                ps.setInt(7, mc.getCurrentZoneId());
+                ps.executeUpdate();
+                return true;
+            } catch (SQLException e){
+                e.printStackTrace();
+                return false;
             }
-        } catch (SQLException e){
-            
-        }
+        } return false;
     }
 }

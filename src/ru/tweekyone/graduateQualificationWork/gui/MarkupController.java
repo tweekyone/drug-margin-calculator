@@ -34,8 +34,10 @@ public class MarkupController{
     private JTextField tfRet_500;
     private JComboBox<String> zones;
     private JLabel zoneContent;
+    private JLabel floatWarningLabel;
+    private boolean floatCheck;
 
-    public MarkupController(RegionMargin rm){
+    public MarkupController(RegionMargin rm, JLabel floatWarningLabel){
         currentRegionMargin = rm;
         panel = new JPanel();
         panel.setBorder(BorderFactory.createTitledBorder("Наценка, %"));
@@ -51,6 +53,8 @@ public class MarkupController{
         upTo50 = new JLabel("до 50 руб:");
         over50To500 = new JLabel("от 50 до 500 руб:");
         over500 = new JLabel("свыше 500 руб:");
+        this.floatWarningLabel = floatWarningLabel;
+        floatCheck = true;
         
         zoneMarginController();
     }
@@ -125,6 +129,7 @@ public class MarkupController{
             panel.add(getMarckupSetterLayout());
             setTextFieldsByIndex(currentRegionMargin, 0);
         } else {
+            currentZoneId = currentRegionMargin.getZoneMargin().get(0).getId();
             panel.add(getMarckupSetterLayout());
             setTextFieldsByIndex(currentRegionMargin, 0);
         }
@@ -184,34 +189,65 @@ public class MarkupController{
     }
 
     public float getUpTo50Value() {
-        return Float.parseFloat(upTo50.getText());
+        return isFloat(upTo50.getText());
     }
 
     public float getTfWhol_50Value() {
-        return Float.parseFloat(tfWhol_50.getText());
+        return isFloat(tfWhol_50.getText());
     }
 
     public float getTfWhol_50_500Value() {
-        return Float.parseFloat(tfWhol_50_500.getText());
+        return isFloat(tfWhol_50_500.getText());
     }
 
     public float getTfWhol_500Value() {
-        return Float.parseFloat(tfWhol_500.getText());
+        return isFloat(tfWhol_500.getText());
     }
 
     public float getTfRet_50Value() {
-        return Float.parseFloat(tfRet_50.getText());
+        return isFloat(tfRet_50.getText());
     }
 
     public float getTfRet_50_500Value() {
-        return Float.parseFloat(tfRet_50_500.getText());
+        return isFloat(tfRet_50_500.getText());
     }
 
     public float getTfRet_500Value() {
-        return Float.parseFloat(tfRet_500.getText());
+        return isFloat(tfRet_500.getText());
     }
     
     public RegionMargin getRegionMargin(){
         return currentRegionMargin;
+    }
+
+    public int getCurrentZoneId() {
+        return currentZoneId;
+    }
+    
+    private float isFloat(String field){
+        try{
+            floatCheck = true;
+            return Float.parseFloat(field);
+        }catch (NumberFormatException e){
+            floatWarningLabel.setText("Введите число!");
+            floatWarningLabel.setVisible(true);
+            floatCheck = false;
+            e.printStackTrace();
+            return 0;
+        }catch (NullPointerException e){
+            floatWarningLabel.setText("Введите число!");
+            floatWarningLabel.setVisible(true);
+            floatCheck = false;
+            e.printStackTrace();
+            return 0;
+        } 
+    }
+
+    public boolean isFloatCheck() {
+        return floatCheck;
+    }
+    
+    public JLabel getFloatWarningLabel() {
+        return floatWarningLabel;
     }
 }

@@ -9,17 +9,17 @@ import javax.swing.JLabel;
  * @author Пирожок
  */
 public class Labels {
-    private JLabel connectionLabel;
+    private JLabel warningLabel;
     
     public Labels(){
-        connectionLabel = new JLabel();
-        connectionLabel.setBackground(Color.red);
-        connectionLabel.setVisible(false);
-        connectionLabel.setOpaque(true);
-        connectionLabel.setAlignmentX(CENTER_ALIGNMENT);
+        warningLabel = new JLabel();
+        warningLabel.setBackground(Color.red);
+        warningLabel.setVisible(false);
+        warningLabel.setOpaque(true);
+        warningLabel.setAlignmentX(CENTER_ALIGNMENT);
     }
     
-    public JLabel getConnectionLabel(){
-        return connectionLabel;
+    public JLabel getWarningLabel(){
+        return warningLabel;
     }
 }
