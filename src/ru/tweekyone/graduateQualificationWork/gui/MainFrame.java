@@ -38,7 +38,7 @@ public class MainFrame extends AbstractFrame{
     private LinkedList<DrugInfo> drugsList;
     private ResultTable rt;
     private JLabel connectionLabel;
-    private JLabel floatWarningLabel;
+    private JLabel resultWarning;
     
    //Адаптер для событий при открытии\закрытии окна
     private class EventHandler extends WindowAdapter{
@@ -72,7 +72,7 @@ public class MainFrame extends AbstractFrame{
         setLocation(dim.width/2 - 300, dim.height/2 - 150);
         setTitle("Калькулятор надбавки ЖНВЛП");
         connectionLabel = new Labels().getWarningLabel();
-        floatWarningLabel = new Labels().getWarningLabel();
+        resultWarning= new Labels().getWarningLabel();
         this.addWindowListener(new EventHandler());
         onInitComponents();
     }
@@ -98,7 +98,7 @@ public class MainFrame extends AbstractFrame{
         
         //Выдает первый RegionMargin (Москва)
         RegionMargin rm = RegionMarginDataAccess.getRegionMargin(1);
-        MarkupController marckupPanel = new MarkupController(rm, floatWarningLabel);
+        MarkupController marckupPanel = new MarkupController(rm);
         JPanel marckupSetter = marckupPanel.getMarckupPanel();
         
         JComboBox<String> regions = getRegions();
@@ -141,7 +141,7 @@ public class MainFrame extends AbstractFrame{
                 Thread marginSavingThread = new Thread(){
                     @Override
                     public void run(){
-                        RegionMarginDataAccess.setRegionMargin(marckupPanel);
+                        RegionMarginDataAccess.setRegionMargin(marckupPanel, resultWarning);
                     }
                 };
                 marginSavingThread.setName("MarginSavingThread");
@@ -192,7 +192,7 @@ public class MainFrame extends AbstractFrame{
                             .addComponent(saveUserMargin)));
         add(searchPanel);
         add(connectionLabel);
-        add(floatWarningLabel);
+        add(resultWarning);
         //Обновление компонентов
         revalidate();
     }

@@ -1,10 +1,12 @@
 package ru.tweekyone.graduateQualificationWork.databaseConnection;
 
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
+import javax.swing.JLabel;
 import ru.tweekyone.graduateQualificationWork.gui.MarkupController;
 import ru.tweekyone.graduateQualificationWork.objects.RegionMargin;
 import ru.tweekyone.graduateQualificationWork.objects.ZoneMargin;
@@ -66,8 +68,8 @@ public class RegionMarginDataAccess {
         }
     }
     
-    public static boolean setRegionMargin(MarkupController mc){
-        if(mc.isFloatCheck()){
+    public static boolean setRegionMargin(MarkupController mc, JLabel resultWarning){
+        if(mc.isFloat()){
             try(Connection con = ConnectionPool.getConnection()){
                 PreparedStatement ps = con.prepareStatement(SET_MARGIN_DATA);
                 ps.setFloat(1, mc.getTfWhol_50Value());
@@ -78,11 +80,17 @@ public class RegionMarginDataAccess {
                 ps.setFloat(6, mc.getTfRet_500Value());
                 ps.setInt(7, mc.getCurrentZoneId());
                 ps.executeUpdate();
+                resultWarning.setText("Наценка сохранена!");
+                resultWarning.setBackground(Color.green);
+                resultWarning.setVisible(true);
                 return true;
             } catch (SQLException e){
                 e.printStackTrace();
                 return false;
             }
-        } return false;
+        } 
+        resultWarning.setText("Введите число!");
+        resultWarning.setVisible(true);
+        return false;
     }
 }
