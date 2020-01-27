@@ -28,6 +28,6 @@ public class DrugMarginCalculator {
         //LinkedList<DrugInfo> rows = db.getDrugsList("Парацетамол", true);
         //DrugBaseDownload dbd = new DrugBaseDownload();
         //DrugBaseDataAccess dbda = new DrugBaseDataAccess(dbd);
-    }
+        }
     
 }

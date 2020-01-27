@@ -36,7 +36,7 @@ public class MainFrame extends AbstractFrame{
     private DrugBaseDownload dbd;
     private DrugBaseDataAccess dbda;
     private LinkedList<DrugInfo> drugsList;
-    private ResultTable rt;
+    private ResultFrame rf;
     private JLabel connectionLabel;
     private JLabel resultWarning;
     
@@ -63,13 +63,13 @@ public class MainFrame extends AbstractFrame{
     }
     
     public MainFrame(){
-        setSize(600, 300);
+        setSize(650, 300);
         setResizable(false);
         //Получение размера окна пользователя
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension dim = toolkit.getScreenSize();
         //Подгонка расположения окна
-        setLocation(dim.width/2 - 300, dim.height/2 - 150);
+        setLocation(dim.width/2 - 325, dim.height/2 - 150);
         setTitle("Калькулятор надбавки ЖНВЛП");
         connectionLabel = new Labels().getWarningLabel();
         resultWarning= new Labels().getWarningLabel();
@@ -130,11 +130,11 @@ public class MainFrame extends AbstractFrame{
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
-                rt = new ResultTable(drugsList, marckupPanel);
+                rf = new ResultFrame(drugsList, marckupPanel);
             }
         });
         
-        JButton saveUserMargin = new JButton("Сохранить \nнаценку");
+        JButton saveUserMargin = new JButton("Сохранить наценку");
         saveUserMargin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -172,8 +172,8 @@ public class MainFrame extends AbstractFrame{
                             .addGroup(searchLayout.createSequentialGroup()
                                     .addComponent(mnn)
                                     .addComponent(tn))
-                            .addComponent(confirm)
-                            .addComponent(saveUserMargin)));
+                            .addComponent(confirm, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(saveUserMargin, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
                     
         searchLayout.setVerticalGroup(searchLayout.createSequentialGroup()
                     .addGroup(searchLayout.createParallelGroup(BASELINE)
@@ -187,8 +187,7 @@ public class MainFrame extends AbstractFrame{
                             .addComponent(regions)
                             .addComponent(confirm))
                     .addGroup(searchLayout.createParallelGroup(BASELINE)
-                            .addComponent(marckupSetter, GroupLayout.PREFERRED_SIZE, 
-                            GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(marckupSetter)
                             .addComponent(saveUserMargin)));
         add(searchPanel);
         add(connectionLabel);

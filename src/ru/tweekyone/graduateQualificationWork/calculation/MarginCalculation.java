@@ -12,35 +12,30 @@ public class MarginCalculation {
         float markup = fOwnerPrice*getWholesaleMarkup(fOwnerPrice, mp)/100;
         if(isVAT){
             float vat = (fOwnerPrice + markup)*10/100;
-            return Float.toString(fOwnerPrice + markup + vat);
+            return String.format("%.2f", (fOwnerPrice + markup + vat));
         }else{
             float vat = fOwnerPrice*10/100;
-            return Float.toString(fOwnerPrice + markup + vat);            
+            return String.format("%.2f", (fOwnerPrice + markup + vat));       
         }
     }
     
-    public static String getRetailMargin(boolean isVAT, boolean isWholesaleVAT, 
+    public static String getRetailMargin(boolean isVAT, boolean isRetailVAT, 
                                         String ownerPrice, String wholesalePrice, MarkupController mp){
         float fOwnerPrice = Float.parseFloat(ownerPrice);
         float markup = fOwnerPrice*getRetailMarkup(fOwnerPrice, mp)/100;
         if(isVAT){
-            if(isWholesaleVAT){
+            if(isRetailVAT){
                 float marginPriceWithoutVAT = getWholesalePriceWithoutVAT(fOwnerPrice, mp) + markup;
                 float vat = marginPriceWithoutVAT*10/100;
-                return Float.toString(marginPriceWithoutVAT + vat);
+                return String.format("%.2f", (marginPriceWithoutVAT + vat));
             }else{
                 float marginPriceWithoutVAT = Float.parseFloat(getWholesaleMargin(false, ownerPrice, mp)) + markup;
                 float vat = marginPriceWithoutVAT*10/100;
-                return Float.toString(marginPriceWithoutVAT + vat);
+                return String.format("%.2f", (marginPriceWithoutVAT + vat));
             }
         }else{
-            if(isWholesaleVAT){
-                float marginPrice = Float.parseFloat(getWholesaleMargin(true, ownerPrice, mp));
-                return Float.toString(markup + marginPrice);
-            }else{
-                float marginPrice = Float.parseFloat(getWholesaleMargin(false, ownerPrice, mp));
-                return Float.toString(markup + marginPrice);
-            }
+                float marginPrice = Float.parseFloat(getWholesaleMargin(isRetailVAT, ownerPrice, mp));
+                return String.format("%.2f", (markup + marginPrice));
         }
     }
     
