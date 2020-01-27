@@ -40,7 +40,7 @@ public class DrugBaseDataAccess {
         }
     }
     
-    public LinkedList<DrugInfo> getDrugsList(String drugName, boolean mnn){
+    public synchronized LinkedList<DrugInfo> getDrugsList(String drugName, boolean mnn){
         LinkedList<DrugInfo> drugsList = new LinkedList<>();
         if(mnn){
             for(Row row : sheet){

@@ -16,6 +16,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import ru.tweekyone.graduateQualificationWork.objects.DrugInfo;
 
 /**
@@ -29,10 +31,15 @@ public class ResultFrame extends AbstractFrame{
     private JRadioButton retailVat;
     private JTextField price;
     private JPanel controllPanel;
+    private JLabel floatWarningLabel;
     
     
-    public ResultFrame(LinkedList<DrugInfo> searchResult, MarkupController mp){
-        setTitle("Результаты расчетов");
+    public ResultFrame(LinkedList<DrugInfo> searchResult, MarkupController mp, String region, String drugName){
+        if(mp.getRegionMargin().hasZone()){
+            setTitle("Результаты расчетов " + region + " " + mp.getZones().getSelectedItem() + " " + drugName);
+        } else {
+            setTitle("Результаты расчетов " + region + " " + drugName);
+        }
         rtc = new ResultTableController(searchResult, mp);
         resultTable = rtc.getResultTable();
         //автоматически устанавливает размер окна
@@ -44,8 +51,10 @@ public class ResultFrame extends AbstractFrame{
         onInitControllPanel();
         JScrollPane scrollPane = new JScrollPane(resultTable);
         setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
+        floatWarningLabel = new Labels().getWarningLabel();
         add(controllPanel);
         add(scrollPane);
+        add(floatWarningLabel);
         revalidate();
     }
     
@@ -75,6 +84,36 @@ public class ResultFrame extends AbstractFrame{
         JLabel label = new JLabel("Фактическая отпускная цена:");
         price = new JTextField(5);
         JButton changePrice = new JButton("Применить");
+        changePrice.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedRow = resultTable.getSelectedRow();
+                if(selectedRow != -1 && price.getText() != null){
+                    try{
+                        Float.parseFloat(price.getText());
+                        floatWarningLabel.setVisible(false);
+                        resultTable.setValueAt(price.getText(), selectedRow, 7);
+                        rtc.setSelectedDrug(vat.isSelected(), retailVat.isSelected(), resultTable.getSelectedRow());
+                        resultTable.revalidate();
+                    } catch (NumberFormatException n){
+                        floatWarningLabel.setText("Введите число!");
+                        floatWarningLabel.setVisible(true);
+                        n.printStackTrace();
+                    }
+                }
+            }
+        });
+        
+        resultTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                int selectedRow = resultTable.getSelectedRow();
+                if(selectedRow != -1){
+                    price.setText((String)resultTable.getValueAt(selectedRow, 7));
+                }
+            }
+        });
+        
         controllPanel.add(vat);
         controllPanel.add(retailVat);
         controllPanel.add(label);

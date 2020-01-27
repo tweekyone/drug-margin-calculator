@@ -36,7 +36,7 @@ public class MainFrame extends AbstractFrame{
     private DrugBaseDownload dbd;
     private DrugBaseDataAccess dbda;
     private LinkedList<DrugInfo> drugsList;
-    private ResultFrame rf;
+    //private ResultFrame rf;
     private JLabel connectionLabel;
     private JLabel resultWarning;
     
@@ -64,7 +64,7 @@ public class MainFrame extends AbstractFrame{
     
     public MainFrame(){
         setSize(650, 300);
-        setResizable(false);
+        setResizable(true);
         //Получение размера окна пользователя
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension dim = toolkit.getScreenSize();
@@ -119,18 +119,18 @@ public class MainFrame extends AbstractFrame{
                 Thread drugSearchThread = new Thread(){
                     @Override
                     public void run(){
-                        dbda = new DrugBaseDataAccess(dbd);
+                        confirm.setEnabled(false);
+                        if(dbda == null){
+                            dbda = new DrugBaseDataAccess(dbd);
+                        } 
                         drugsList = dbda.getDrugsList(textField.getText(), mnn.isSelected());
+                        new ResultFrame(drugsList, marckupPanel, (String) regions.getSelectedItem(), textField.getText());
+                        confirm.setEnabled(true);
                     }
                 };
                 drugSearchThread.setName("DrugSearchThread");
                 drugSearchThread.start();
-                try {
-                    drugSearchThread.join();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-                rf = new ResultFrame(drugsList, marckupPanel);
+
             }
         });
         

@@ -215,6 +215,10 @@ public class MarkupController{
     public int getCurrentZoneId() {
         return currentZoneId;
     }
+
+    public JComboBox<String> getZones() {
+        return zones;
+    }
     
     public boolean isFloat(){
         try{
