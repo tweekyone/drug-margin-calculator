@@ -1,10 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ru.tweekyone.graduateQualificationWork.gui;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
@@ -27,8 +23,8 @@ import ru.tweekyone.graduateQualificationWork.objects.DrugInfo;
 public class ResultFrame extends AbstractFrame{
     private JTable resultTable;
     private ResultTableController rtc;
-    private JRadioButton vat;
-    private JRadioButton retailVat;
+    private JRadioButton withoutVat;
+    private JRadioButton withoutRetailVat;
     private JTextField price;
     private JPanel controllPanel;
     private JLabel floatWarningLabel;
@@ -61,22 +57,23 @@ public class ResultFrame extends AbstractFrame{
     private void onInitControllPanel(){
         controllPanel = new JPanel();
         controllPanel.setLayout(new BoxLayout(controllPanel, BoxLayout.LINE_AXIS));
-        vat = new JRadioButton("Оптовая на УСН");
-        vat.setSelected(false);
-        vat.addActionListener(new ActionListener() {
+        
+        withoutVat = new JRadioButton("Оптовая на УСН");
+        withoutVat.setSelected(false);
+        withoutVat.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                rtc.setMarginType(vat.isSelected(), retailVat.isSelected());
+                rtc.setMarginType(withoutVat.isSelected(), withoutRetailVat.isSelected());
                 resultTable.revalidate();
             }
         });
       
-        retailVat = new JRadioButton("Розничная на УСН");
-        retailVat.setSelected(false);
-        retailVat.addActionListener(new ActionListener() {
+        withoutRetailVat = new JRadioButton("Розничная на УСН");
+        withoutRetailVat.setSelected(false);
+        withoutRetailVat.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                rtc.setMarginType(vat.isSelected(), retailVat.isSelected());
+                rtc.setMarginType(withoutVat.isSelected(), withoutRetailVat.isSelected());
                 resultTable.revalidate();
             }
         });
@@ -93,7 +90,7 @@ public class ResultFrame extends AbstractFrame{
                         Float.parseFloat(price.getText());
                         floatWarningLabel.setVisible(false);
                         resultTable.setValueAt(price.getText(), selectedRow, 7);
-                        rtc.setSelectedDrug(vat.isSelected(), retailVat.isSelected(), resultTable.getSelectedRow());
+                        rtc.setSelectedDrug(withoutVat.isSelected(), withoutRetailVat.isSelected(), resultTable.getSelectedRow());
                         resultTable.revalidate();
                     } catch (NumberFormatException n){
                         floatWarningLabel.setText("Введите число!");
@@ -114,8 +111,10 @@ public class ResultFrame extends AbstractFrame{
             }
         });
         
-        controllPanel.add(vat);
-        controllPanel.add(retailVat);
+        controllPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, changePrice.getPreferredSize().height));
+        
+        controllPanel.add(withoutVat);
+        controllPanel.add(withoutRetailVat);
         controllPanel.add(label);
         controllPanel.add(price);
         controllPanel.add(changePrice);

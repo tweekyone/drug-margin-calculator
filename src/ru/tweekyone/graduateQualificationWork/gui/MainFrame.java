@@ -9,8 +9,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
@@ -116,21 +114,24 @@ public class MainFrame extends AbstractFrame{
         confirm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Thread drugSearchThread = new Thread(){
-                    @Override
-                    public void run(){
-                        confirm.setEnabled(false);
-                        if(dbda == null){
-                            dbda = new DrugBaseDataAccess(dbd);
-                        } 
-                        drugsList = dbda.getDrugsList(textField.getText(), mnn.isSelected());
-                        new ResultFrame(drugsList, marckupPanel, (String) regions.getSelectedItem(), textField.getText());
-                        confirm.setEnabled(true);
-                    }
-                };
-                drugSearchThread.setName("DrugSearchThread");
-                drugSearchThread.start();
-
+                if(textField.getText() != null && !textField.getText().trim().equals("")){
+                    Thread drugSearchThread = new Thread(){
+                        @Override
+                        public void run(){
+                            confirm.setEnabled(false);
+                            if(dbda == null){
+                                dbda = new DrugBaseDataAccess(dbd);
+                            } 
+                            drugsList = dbda.getDrugsList(textField.getText(), mnn.isSelected());
+                            new ResultFrame(drugsList, marckupPanel, (String) regions.getSelectedItem(), textField.getText());
+                            confirm.setEnabled(true);
+                        }
+                    };
+                    drugSearchThread.setName("DrugSearchThread");
+                    drugSearchThread.start();
+                } else {
+                    textField.setText("Введите наименование препарата!");
+                }
             }
         });
         

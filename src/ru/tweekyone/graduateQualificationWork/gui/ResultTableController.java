@@ -40,8 +40,8 @@ public class ResultTableController{
             String regNo = di.getREGNO();
             String date = di.getDATE();
             String ownerPrice = String.valueOf(di.getOwnerPrice());
-            String wholesalePrice = MarginCalculation.getWholesaleMargin(true, di.getOwnerPrice(), mp);
-            String retailPrice = MarginCalculation.getRetailMargin(true, true, di.getOwnerPrice(), wholesalePrice, mp);
+            String wholesalePrice = MarginCalculation.getWholesaleMargin(false, di.getOwnerPrice(), mp);
+            String retailPrice = MarginCalculation.getRetailMargin(false, false, di.getOwnerPrice(), wholesalePrice, mp);
             dataArray[i] = new String[]{mnn, tn, spec, own, amount, regNo, date, ownerPrice, wholesalePrice, retailPrice};
         }
     };
@@ -54,18 +54,18 @@ public class ResultTableController{
         resultTable.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
     }
     
-    public void setMarginType(boolean isVAT, boolean isWholesaleVAT){
+    public void setMarginType(boolean withoutVat, boolean withoutWholesaleVat){
         for (int i = 0; i < dataArray.length; i++) {
-            String wholesaleNewPrice = MarginCalculation.getWholesaleMargin(isVAT, Float.valueOf((String) resultTable.getValueAt(i, 7)), mp);
-            String retailNewPrice = MarginCalculation.getRetailMargin(isVAT, isWholesaleVAT, Float.valueOf((String) resultTable.getValueAt(i, 7)), wholesaleNewPrice, mp);
+            String wholesaleNewPrice = MarginCalculation.getWholesaleMargin(withoutVat, Float.valueOf((String) resultTable.getValueAt(i, 7)), mp);
+            String retailNewPrice = MarginCalculation.getRetailMargin(withoutVat, withoutWholesaleVat, Float.valueOf((String) resultTable.getValueAt(i, 7)), wholesaleNewPrice, mp);
             resultTable.setValueAt(wholesaleNewPrice, i, 8);
             resultTable.setValueAt(retailNewPrice, i, 9);
         }
     }
     
-    public void setSelectedDrug(boolean isVAT, boolean isWholesaleVAT, int row){
-        String wholesaleNewPrice = MarginCalculation.getWholesaleMargin(isVAT, Float.valueOf((String) resultTable.getValueAt(row, 7)), mp);
-        String retailNewPrice = MarginCalculation.getRetailMargin(isVAT, isWholesaleVAT, Float.valueOf((String) resultTable.getValueAt(row, 7)), wholesaleNewPrice, mp);
+    public void setSelectedDrug(boolean withoutVat, boolean withoutWholesaleVat, int row){
+        String wholesaleNewPrice = MarginCalculation.getWholesaleMargin(withoutVat, Float.valueOf((String) resultTable.getValueAt(row, 7)), mp);
+        String retailNewPrice = MarginCalculation.getRetailMargin(withoutVat, withoutWholesaleVat, Float.valueOf((String) resultTable.getValueAt(row, 7)), wholesaleNewPrice, mp);
         resultTable.setValueAt(wholesaleNewPrice, row, 8);
         resultTable.setValueAt(retailNewPrice, row, 9);
     }

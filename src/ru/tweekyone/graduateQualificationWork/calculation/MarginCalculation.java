@@ -8,9 +8,9 @@ import ru.tweekyone.graduateQualificationWork.gui.MarkupController;
  * @author Пирожок
  */
 public class MarginCalculation {
-    public static String getWholesaleMargin(boolean isVAT, float ownerPrice, MarkupController mp){;
+    public static String getWholesaleMargin(boolean withoutVat, float ownerPrice, MarkupController mp){
         float markup = ownerPrice*getWholesaleMarkup(ownerPrice, mp)/100;
-        if(isVAT){
+        if(!withoutVat){
             float vat = (ownerPrice + markup)*10/100;
             return String.format(Locale.US, "%.2f", (ownerPrice + markup + vat));
         }else{
@@ -19,21 +19,21 @@ public class MarginCalculation {
         }
     }
     
-    public static String getRetailMargin(boolean isVAT, boolean isRetailVAT, 
+    public static String getRetailMargin(boolean withoutVat, boolean withoutRetailVat, 
                                         float ownerPrice, String wholesalePrice, MarkupController mp){
         float markup = ownerPrice*getRetailMarkup(ownerPrice, mp)/100;
-        if(isVAT){
-            if(isRetailVAT){
+        if(!withoutVat){
+            if(!withoutRetailVat){
                 float marginPriceWithoutVAT = getWholesalePriceWithoutVAT(ownerPrice, mp) + markup;
                 float vat = marginPriceWithoutVAT*10/100;
                 return String.format(Locale.US, "%.2f", (marginPriceWithoutVAT + vat));
             }else{
-                float marginPriceWithoutVAT = Float.parseFloat(getWholesaleMargin(false, ownerPrice, mp)) + markup;
+                float marginPriceWithoutVAT = Float.parseFloat(getWholesaleMargin(true, ownerPrice, mp)) + markup;
                 float vat = marginPriceWithoutVAT*10/100;
                 return String.format(Locale.US, "%.2f", (marginPriceWithoutVAT + vat));
             }
         }else{
-                float marginPrice = Float.parseFloat(getWholesaleMargin(isRetailVAT, ownerPrice, mp));
+                float marginPrice = Float.parseFloat(getWholesaleMargin(withoutRetailVat, ownerPrice, mp));
                 return String.format(Locale.US, "%.2f", (markup + marginPrice));
         }
     }
