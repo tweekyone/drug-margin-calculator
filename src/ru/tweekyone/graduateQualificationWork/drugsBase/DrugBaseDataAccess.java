@@ -40,17 +40,33 @@ public class DrugBaseDataAccess {
         }
     }
     
-    public synchronized LinkedList<DrugInfo> getDrugsList(String drugName, boolean mnn){
+    public synchronized LinkedList<DrugInfo> getDrugsList(String drugName, boolean mnn, String regNumber){
         LinkedList<DrugInfo> drugsList = new LinkedList<>();
-        if(mnn){
-            for(Row row : sheet){
-                for(Cell cell : row){
-                    if (cell.getColumnIndex() == 0){
-                        if (cell.getStringCellValue().toLowerCase().trim()
-                                .contains(drugName.toLowerCase().trim())){
-                            DrugInfo di = rowToDrug(cell.getRow());
-                            if(!drugsList.contains(di)){
-                                drugsList.add(di);
+        if(regNumber.isEmpty()){
+            if(mnn){
+                for(Row row : sheet){
+                    for(Cell cell : row){
+                        if (cell.getColumnIndex() == 0){
+                            if (cell.getStringCellValue().toLowerCase().trim()
+                                    .contains(drugName.toLowerCase().trim())){
+                                DrugInfo di = rowToDrug(cell.getRow());
+                                if(!drugsList.contains(di)){
+                                    drugsList.add(di);
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                for(Row row : sheet){
+                    for(Cell cell : row){
+                        if (cell.getColumnIndex() == 1){
+                            if (cell.getStringCellValue().toLowerCase().trim()
+                                    .contains(drugName.toLowerCase().trim())){
+                                DrugInfo di = rowToDrug(cell.getRow());
+                                if(!drugsList.contains(di)){
+                                    drugsList.add(di);
+                                }
                             }
                         }
                     }
@@ -59,9 +75,9 @@ public class DrugBaseDataAccess {
         } else {
             for(Row row : sheet){
                 for(Cell cell : row){
-                    if (cell.getColumnIndex() == 1){
+                    if (cell.getColumnIndex() == 8){
                         if (cell.getStringCellValue().toLowerCase().trim()
-                                .contains(drugName.toLowerCase().trim())){
+                                .contains(regNumber.toLowerCase().trim())){
                             DrugInfo di = rowToDrug(cell.getRow());
                             if(!drugsList.contains(di)){
                                 drugsList.add(di);

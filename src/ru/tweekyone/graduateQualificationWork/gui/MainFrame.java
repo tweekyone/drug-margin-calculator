@@ -1,5 +1,6 @@
 package ru.tweekyone.graduateQualificationWork.gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -81,8 +82,10 @@ public class MainFrame extends AbstractFrame{
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         
         JLabel drugName = new JLabel("Наименование препарата:");
+        JLabel regNumber = new JLabel("Регистрационный номер:");
         JLabel regionName = new JLabel("Регион:");
         JTextField textField = new JTextField(14);
+        JTextField regTextField = new JTextField(14);
         ButtonGroup buttonGroup = new ButtonGroup();
         
         JRadioButton mnn = new JRadioButton("МНН");
@@ -114,7 +117,9 @@ public class MainFrame extends AbstractFrame{
         confirm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(textField.getText() != null && !textField.getText().trim().equals("")){
+                textField.setBackground(Color.white);
+                regTextField.setBackground(Color.white);
+                if(!textField.getText().trim().equals("")){
                     Thread drugSearchThread = new Thread(){
                         @Override
                         public void run(){
@@ -122,7 +127,22 @@ public class MainFrame extends AbstractFrame{
                             if(dbda == null){
                                 dbda = new DrugBaseDataAccess(dbd);
                             } 
-                            drugsList = dbda.getDrugsList(textField.getText(), mnn.isSelected());
+                            drugsList = dbda.getDrugsList(textField.getText(), mnn.isSelected(), regTextField.getText());
+                            new ResultFrame(drugsList, marckupPanel, (String) regions.getSelectedItem(), textField.getText());
+                            confirm.setEnabled(true);
+                        }
+                    };
+                    drugSearchThread.setName("DrugSearchThread");
+                    drugSearchThread.start();
+                } else if(!regTextField.getText().trim().equals("")){
+                    Thread drugSearchThread = new Thread(){
+                        @Override
+                        public void run(){
+                            confirm.setEnabled(false);
+                            if(dbda == null){
+                                dbda = new DrugBaseDataAccess(dbd);
+                            } 
+                            drugsList = dbda.getDrugsList(textField.getText(), mnn.isSelected(), regTextField.getText());
                             new ResultFrame(drugsList, marckupPanel, (String) regions.getSelectedItem(), textField.getText());
                             confirm.setEnabled(true);
                         }
@@ -130,7 +150,8 @@ public class MainFrame extends AbstractFrame{
                     drugSearchThread.setName("DrugSearchThread");
                     drugSearchThread.start();
                 } else {
-                    textField.setText("Введите наименование препарата!");
+                    textField.setBackground(Color.red);
+                    regTextField.setBackground(Color.red);
                 }
             }
         });
@@ -164,9 +185,11 @@ public class MainFrame extends AbstractFrame{
         searchLayout.setHorizontalGroup(searchLayout.createSequentialGroup()
                     .addGroup(searchLayout.createParallelGroup(LEADING)
                             .addComponent(drugName)
+                            .addComponent(regNumber)
                             .addComponent(regionName))
                     .addGroup(searchLayout.createParallelGroup(LEADING)
                             .addComponent(textField)
+                            .addComponent(regTextField)
                             .addComponent(regions)
                             .addComponent(marckupSetter))
                     .addGroup(searchLayout.createParallelGroup(LEADING)
@@ -183,6 +206,9 @@ public class MainFrame extends AbstractFrame{
                             .addGroup(searchLayout.createParallelGroup(BASELINE)
                                     .addComponent(mnn)
                                     .addComponent(tn)))
+                    .addGroup(searchLayout.createParallelGroup(BASELINE)
+                            .addComponent(regNumber)
+                            .addComponent(regTextField))
                     .addGroup(searchLayout.createParallelGroup(BASELINE)
                             .addComponent(regionName)
                             .addComponent(regions)

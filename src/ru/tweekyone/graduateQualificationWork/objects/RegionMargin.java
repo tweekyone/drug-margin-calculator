@@ -55,8 +55,6 @@ public class RegionMargin {
         this.zoneMargin = zoneMargin;
     }
     
-    
-    
     public String[] getZoneArray(){
         String[] zoneArray = new String[zoneMargin.size()];
         for (int i = 0; i < zoneMargin.size(); i++){

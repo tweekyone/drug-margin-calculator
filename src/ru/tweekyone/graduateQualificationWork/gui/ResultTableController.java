@@ -46,7 +46,6 @@ public class ResultTableController{
         }
     };
     
-    //добавить кнопки УСН/НДС, коррекция фактической цены производителя
     private void onInitComponents(){
         dtm = new DefaultTableModel(dataArray, columnNames);
         resultTable = new JTable(dtm);
