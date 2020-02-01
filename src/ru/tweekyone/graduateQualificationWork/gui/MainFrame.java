@@ -96,11 +96,10 @@ public class MainFrame extends AbstractFrame{
         buttonGroup.add(mnn);
         buttonGroup.add(tn);
         
-        
         //Выдает первый RegionMargin (Москва)
         RegionMargin rm = RegionMarginDataAccess.getRegionMargin(1);
-        MarkupController marckupPanel = new MarkupController(rm);
-        JPanel marckupSetter = marckupPanel.getMarckupPanel();
+        MarkupController markupPanel = new MarkupController(rm);
+        JPanel markupSetter = markupPanel.getMarckupPanel();
         
         JComboBox<String> regions = getRegions();
         regions.addItemListener(new ItemListener() {
@@ -109,7 +108,7 @@ public class MainFrame extends AbstractFrame{
                 int regionId = regions.getSelectedIndex() + 1;
                 //Нельзя передать ссылку на созданный класс actionRm в rm напрямую
                 RegionMargin actionRm = RegionMarginDataAccess.getRegionMargin(regionId);
-                marckupPanel.setZoneMarginController(actionRm);
+                markupPanel.setZoneMarginController(actionRm);
             }
         });
         
@@ -128,7 +127,7 @@ public class MainFrame extends AbstractFrame{
                                 dbda = new DrugBaseDataAccess(dbd);
                             } 
                             drugsList = dbda.getDrugsList(textField.getText(), mnn.isSelected(), regTextField.getText());
-                            new ResultFrame(drugsList, marckupPanel, (String) regions.getSelectedItem(), textField.getText());
+                            new ResultFrame(drugsList, markupPanel, (String) regions.getSelectedItem(), textField.getText());
                             confirm.setEnabled(true);
                         }
                     };
@@ -143,7 +142,7 @@ public class MainFrame extends AbstractFrame{
                                 dbda = new DrugBaseDataAccess(dbd);
                             } 
                             drugsList = dbda.getDrugsList(textField.getText(), mnn.isSelected(), regTextField.getText());
-                            new ResultFrame(drugsList, marckupPanel, (String) regions.getSelectedItem(), textField.getText());
+                            new ResultFrame(drugsList, markupPanel, (String) regions.getSelectedItem(), textField.getText());
                             confirm.setEnabled(true);
                         }
                     };
@@ -163,7 +162,7 @@ public class MainFrame extends AbstractFrame{
                 Thread marginSavingThread = new Thread(){
                     @Override
                     public void run(){
-                        RegionMarginDataAccess.setRegionMargin(marckupPanel, resultWarning);
+                        RegionMarginDataAccess.setRegionMargin(markupPanel, resultWarning);
                     }
                 };
                 marginSavingThread.setName("MarginSavingThread");
@@ -191,7 +190,7 @@ public class MainFrame extends AbstractFrame{
                             .addComponent(textField)
                             .addComponent(regTextField)
                             .addComponent(regions)
-                            .addComponent(marckupSetter))
+                            .addComponent(markupSetter))
                     .addGroup(searchLayout.createParallelGroup(LEADING)
                             .addGroup(searchLayout.createSequentialGroup()
                                     .addComponent(mnn)
@@ -214,7 +213,7 @@ public class MainFrame extends AbstractFrame{
                             .addComponent(regions)
                             .addComponent(confirm))
                     .addGroup(searchLayout.createParallelGroup(BASELINE)
-                            .addComponent(marckupSetter)
+                            .addComponent(markupSetter)
                             .addComponent(saveUserMargin)));
         add(searchPanel);
         add(connectionLabel);
