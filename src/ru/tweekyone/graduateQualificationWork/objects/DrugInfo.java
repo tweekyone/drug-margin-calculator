@@ -1,9 +1,5 @@
 package ru.tweekyone.graduateQualificationWork.objects;
 
-/**
- *
- * @author Пирожок
- */
 public class DrugInfo {
     private final String MNN;
     private final String TN;

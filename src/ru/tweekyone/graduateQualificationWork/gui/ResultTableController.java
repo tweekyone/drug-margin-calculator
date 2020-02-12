@@ -6,10 +6,6 @@ import javax.swing.table.DefaultTableModel;
 import ru.tweekyone.graduateQualificationWork.calculation.MarginCalculation;
 import ru.tweekyone.graduateQualificationWork.objects.DrugInfo;
 
-/**
- *
- * @author Пирожок
- */
 public class ResultTableController{
     private String[][] dataArray;
     private String[] columnNames;

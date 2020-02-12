@@ -13,10 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import ru.tweekyone.graduateQualificationWork.objects.RegionMargin;
 
-/**
- *
- * @author Пирожок
- */
 public class MarkupController{
     private RegionMargin currentRegionMargin;
     private int currentZoneId;

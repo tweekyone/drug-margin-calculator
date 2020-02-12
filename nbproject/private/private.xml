@@ -2,21 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group name="Exercises">
-            <file>file:/C:/Users/Пирожок/Documents/NetBeansProjects/Exercises/DrugMarginCalculator/src/ru/tweekyone/graduateQualificationWork/gui/Labels.java</file>
-            <file>file:/C:/Users/Пирожок/Documents/NetBeansProjects/Exercises/DrugMarginCalculator/src/ru/tweekyone/graduateQualificationWork/objects/RegionMargin.java</file>
-            <file>file:/C:/Users/Пирожок/Documents/NetBeansProjects/Exercises/DrugMarginCalculator/src/ru/tweekyone/graduateQualificationWork/databaseConnection/RegionMarginDataAccess.java</file>
-            <file>file:/C:/Users/Пирожок/Documents/NetBeansProjects/Exercises/DrugMarginCalculator/src/ru/tweekyone/graduateQualificationWork/gui/ResultFrame.java</file>
-            <file>file:/C:/Users/Пирожок/Documents/NetBeansProjects/Exercises/DrugMarginCalculator/src/ru/tweekyone/graduateQualificationWork/gui/ResultTableController.java</file>
-            <file>file:/C:/Users/Пирожок/Documents/NetBeansProjects/Exercises/DrugMarginCalculator/src/ru/tweekyone/graduateQualificationWork/databaseConnection/ConnectionPool.java</file>
-            <file>file:/C:/Users/Пирожок/Documents/NetBeansProjects/Exercises/DrugMarginCalculator/src/ru/tweekyone/graduateQualificationWork/drugsBase/DrugBaseDataAccess.java</file>
-            <file>file:/C:/Users/Пирожок/Documents/NetBeansProjects/Exercises/DrugMarginCalculator/src/ru/tweekyone/graduateQualificationWork/gui/MarkupController.java</file>
-            <file>file:/C:/Users/Пирожок/Documents/NetBeansProjects/Exercises/DrugMarginCalculator/src/ru/tweekyone/graduateQualificationWork/objects/DrugInfo.java</file>
-            <file>file:/C:/Users/Пирожок/Documents/NetBeansProjects/Exercises/DrugMarginCalculator/src/ru/tweekyone/graduateQualificationWork/calculation/MarginCalculation.java</file>
-            <file>file:/C:/Users/Пирожок/Documents/NetBeansProjects/Exercises/DrugMarginCalculator/src/ru/tweekyone/graduateQualificationWork/objects/ZoneMargin.java</file>
-            <file>file:/C:/Users/Пирожок/Documents/NetBeansProjects/Exercises/DrugMarginCalculator/src/ru/tweekyone/graduateQualificationWork/drugsBase/DrugBaseDownload.java</file>
-            <file>file:/C:/Users/Пирожок/Documents/NetBeansProjects/Exercises/DrugMarginCalculator/src/ru/tweekyone/graduateQualificationWork/gui/AbstractFrame.java</file>
-            <file>file:/C:/Users/Пирожок/Documents/NetBeansProjects/Exercises/DrugMarginCalculator/src/ru/tweekyone/graduateQualificationWork/gui/MainFrame.java</file>
-        </group>
+        <group name="Exercises"/>
     </open-files>
 </project-private>

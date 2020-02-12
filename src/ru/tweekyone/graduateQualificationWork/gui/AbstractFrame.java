@@ -5,10 +5,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-/**
- *
- * @author Пирожок
- */
 //Абстрактный фрейм для унификации других окон
 public abstract class AbstractFrame extends JFrame{
     
@@ -25,7 +21,6 @@ public abstract class AbstractFrame extends JFrame{
     }
     
     public AbstractFrame(){
-        setVisible(true);
         //DISPOSE_ON_CLOSE для правильного закрытия ресурсов
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         //Добавление иконки в шапку

@@ -11,10 +11,6 @@ import ru.tweekyone.graduateQualificationWork.gui.MarkupController;
 import ru.tweekyone.graduateQualificationWork.objects.RegionMargin;
 import ru.tweekyone.graduateQualificationWork.objects.ZoneMargin;
 
-/**
- *
- * @author Пирожок
- */
 public class RegionMarginDataAccess {
     private static final String GET_MARGIN_DATA = "SELECT * FROM REGION LEFT JOIN "
             + "ZONE_MARGIN ON REGION.ID = ZONE_MARGIN.ID_REGION WHERE REGION.ID = ?";

@@ -1,9 +1,5 @@
 package ru.tweekyone.graduateQualificationWork.objects;
 
-/**
- *
- * @author Пирожок
- */
 public class ZoneMargin {
     private final int id;
     private final int regionId;

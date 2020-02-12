@@ -27,15 +27,9 @@ import ru.tweekyone.graduateQualificationWork.drugsBase.DrugBaseDownload;
 import ru.tweekyone.graduateQualificationWork.objects.DrugInfo;
 import ru.tweekyone.graduateQualificationWork.objects.RegionMargin;
 
-/**
- *
- * @author Пирожок
- */
 public class MainFrame extends AbstractFrame{
     private DrugBaseDownload dbd;
     private DrugBaseDataAccess dbda;
-    private LinkedList<DrugInfo> drugsList;
-    //private ResultFrame rf;
     private JLabel connectionLabel;
     private JLabel resultWarning;
     
@@ -73,6 +67,7 @@ public class MainFrame extends AbstractFrame{
         connectionLabel = new Labels().getWarningLabel();
         resultWarning= new Labels().getWarningLabel();
         this.addWindowListener(new EventHandler());
+        setVisible(true);
         onInitComponents();
     }
     
@@ -124,9 +119,9 @@ public class MainFrame extends AbstractFrame{
                         public void run(){
                             confirm.setEnabled(false);
                             if(dbda == null){
-                                dbda = new DrugBaseDataAccess(dbd);
+                                dbda = new DrugBaseDataAccess(dbd.getDrugBasePath());
                             } 
-                            drugsList = dbda.getDrugsList(textField.getText(), mnn.isSelected(), regTextField.getText());
+                            LinkedList<DrugInfo> drugsList = dbda.getDrugsList(textField.getText(), mnn.isSelected(), regTextField.getText());
                             new ResultFrame(drugsList, markupPanel, (String) regions.getSelectedItem(), textField.getText());
                             confirm.setEnabled(true);
                         }
@@ -139,9 +134,10 @@ public class MainFrame extends AbstractFrame{
                         public void run(){
                             confirm.setEnabled(false);
                             if(dbda == null){
-                                dbda = new DrugBaseDataAccess(dbd);
+                                dbda = new DrugBaseDataAccess(dbd.getDrugBasePath());
                             } 
-                            drugsList = dbda.getDrugsList(textField.getText(), mnn.isSelected(), regTextField.getText());
+                            
+                            LinkedList<DrugInfo> drugsList = dbda.getDrugsList(textField.getText(), mnn.isSelected(), regTextField.getText());
                             new ResultFrame(drugsList, markupPanel, (String) regions.getSelectedItem(), textField.getText());
                             confirm.setEnabled(true);
                         }

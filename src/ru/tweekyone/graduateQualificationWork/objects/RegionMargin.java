@@ -2,10 +2,6 @@ package ru.tweekyone.graduateQualificationWork.objects;
 
 import java.util.LinkedList;
 
-/**
- *
- * @author Пирожок
- */
 public class RegionMargin {
     private int id;
     private String region;

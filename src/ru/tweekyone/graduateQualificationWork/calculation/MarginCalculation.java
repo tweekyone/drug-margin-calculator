@@ -3,10 +3,6 @@ package ru.tweekyone.graduateQualificationWork.calculation;
 import java.util.Locale;
 import ru.tweekyone.graduateQualificationWork.gui.MarkupController;
 
-/**
- *
- * @author Пирожок
- */
 public class MarginCalculation {
     public static String getWholesaleMargin(boolean withoutVat, float ownerPrice, MarkupController mp){
         float markup = ownerPrice*getWholesaleMarkup(ownerPrice, mp)/100;

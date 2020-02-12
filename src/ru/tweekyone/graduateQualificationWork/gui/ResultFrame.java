@@ -16,10 +16,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import ru.tweekyone.graduateQualificationWork.objects.DrugInfo;
 
-/**
- *
- * @author Пирожок
- */
 public class ResultFrame extends AbstractFrame{
     private JTable resultTable;
     private ResultTableController rtc;
@@ -38,6 +34,7 @@ public class ResultFrame extends AbstractFrame{
         }
         rtc = new ResultTableController(searchResult, mp);
         resultTable = rtc.getResultTable();
+        setVisible(true);
         //автоматически устанавливает размер окна
         onInitComponents();
         pack();

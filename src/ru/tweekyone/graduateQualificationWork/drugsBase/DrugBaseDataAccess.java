@@ -14,17 +14,12 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import ru.tweekyone.graduateQualificationWork.objects.DrugInfo;
 
-/**
- *
- * @author Пирожок
- */
 public class DrugBaseDataAccess {
     private String path;
-    //private HSSFWorkbook workbook;
     private HSSFSheet sheet;
     
-    public DrugBaseDataAccess(DrugBaseDownload dbd) {
-        path = dbd.getDrugBasePath();
+    public DrugBaseDataAccess(String drugTablePath) {
+        path = drugTablePath;
         exstractData();
     }
     
@@ -37,7 +32,7 @@ public class DrugBaseDataAccess {
             sheet = workbook.getSheet(workbook.getSheetName(0));
         } catch (IOException e){
             e.printStackTrace();
-        }
+        } 
     }
     
     public synchronized LinkedList<DrugInfo> getDrugsList(String drugName, boolean mnn, String regNumber){
@@ -87,7 +82,7 @@ public class DrugBaseDataAccess {
                 }
             }
         }
-            return drugsList;
+        return drugsList;
     }
     
     public DrugInfo rowToDrug(Row row){

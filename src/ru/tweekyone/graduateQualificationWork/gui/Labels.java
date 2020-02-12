@@ -4,10 +4,6 @@ import java.awt.Color;
 import static java.awt.Component.CENTER_ALIGNMENT;
 import javax.swing.JLabel;
 
-/**
- *
- * @author Пирожок
- */
 public class Labels {
     private JLabel warningLabel;
     
